@@ -6,6 +6,7 @@ import com.pergamon.Pergamnon.v1.entity.File;
 import com.pergamon.Pergamnon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamnon.v1.exception.ResourceCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class ResourceService {
     }
 
     @Transactional(rollbackFor = IOException.class)
+    @Async("threadPoolTaskExecutor")
     public void create(URL url) throws IOException {
         FilePropertiesPojo filePropertiesPojo = this.fileStorageService.storeFile(url);
 
