@@ -1,5 +1,6 @@
 package com.pergamon.Pergamnon.v1.service;
 
+import com.pergamon.Pergamnon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamnon.v1.exception.FileNotFoundException;
 import com.pergamon.Pergamnon.v1.exception.FileStorageException;
 import com.pergamon.Pergamnon.v1.property.FileStorageProperties;
@@ -17,8 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -36,23 +35,25 @@ public class FileStorageService {
         }
     }
 
-    public Map<String, String> storeFile(URL url) {
-        Map<String, String> fileNames = new HashMap<>();
+    public FilePropertiesPojo storeFile(URL url) {
+        FilePropertiesPojo filePropertiesPojo = new FilePropertiesPojo();
         String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
+        String storedFileName = UUID.randomUUID().toString();
 
         try {
             if(fileName.contains("..")) {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
-            String storedFileName = UUID.randomUUID().toString();
-            fileNames.put("fileName", fileName);
-            fileNames.put("storageFileName", storedFileName);
+            filePropertiesPojo
+                    .setName(fileName)
+                    .setStorageName(storedFileName)
+                    .setType(url.openConnection().getContentType());
 
             Path targetLocation = this.fileStorageLocation.resolve(storedFileName);
             Files.copy(url.openStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return fileNames;
+            return filePropertiesPojo;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }

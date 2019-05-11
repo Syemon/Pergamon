@@ -1,6 +1,7 @@
 package com.pergamon.Pergamnon.v1.service.unit;
 
 import com.pergamon.Pergamnon.PergamnonApplication;
+import com.pergamon.Pergamnon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamnon.v1.service.FileStorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Assert;
@@ -16,19 +17,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PergamnonApplication.class)
 @AutoConfigureMockMvc()
 public class FileStorageServiceTests {
     @Mock
-    URL url;
+    private URL url;
 
     @Mock
-    FilenameUtils filenameUtils = new FilenameUtils();
+    private URLConnection urlConnection;
+
+    @Mock
+    private FilenameUtils filenameUtils = new FilenameUtils();
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -38,11 +42,13 @@ public class FileStorageServiceTests {
         InputStream inputStream = new ByteArrayInputStream("test".getBytes());
         Mockito.when(url.getPath()).thenReturn("https://example/test.txt");
         Mockito.when(url.openStream()).thenReturn(inputStream);
+        Mockito.when(url.openConnection()).thenReturn(this.urlConnection);
+        Mockito.when(this.urlConnection.getContentType()).thenReturn("plain/text");
 
-        Map<String, String> storedFileNames = fileStorageService.storeFile(this.url);
+        FilePropertiesPojo fileProperties = fileStorageService.storeFile(this.url);
 
-        Assert.assertEquals(storedFileNames.get("fileName"), "test.txt");
-        Assert.assertTrue(storedFileNames.get("storageFileName")
+        Assert.assertEquals(fileProperties.getName(), "test.txt");
+        Assert.assertTrue(fileProperties.getStorageName()
                 .matches("[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}"));
     }
 
