@@ -4,6 +4,7 @@ import com.pergamon.Pergamnon.v1.dao.FileDao;
 import com.pergamon.Pergamnon.v1.dao.ResourceDao;
 import com.pergamon.Pergamnon.v1.entity.File;
 import com.pergamon.Pergamnon.v1.entity.FilePropertiesPojo;
+import com.pergamon.Pergamnon.v1.entity.Resource;
 import com.pergamon.Pergamnon.v1.exception.ResourceCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 @Service
 public class ResourceService {
@@ -41,5 +43,10 @@ public class ResourceService {
         } catch (IOException exc) {
             throw new ResourceCreationException("There was an error during resource creation", exc);
         }
+    }
+
+    @Transactional
+    public List<Resource> list() {
+        return this.resourceDao.list();
     }
 }

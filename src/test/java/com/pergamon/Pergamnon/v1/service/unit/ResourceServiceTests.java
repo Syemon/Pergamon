@@ -4,9 +4,11 @@ import com.pergamon.Pergamnon.v1.dao.FileDao;
 import com.pergamon.Pergamnon.v1.dao.ResourceDao;
 import com.pergamon.Pergamnon.v1.entity.File;
 import com.pergamon.Pergamnon.v1.entity.FilePropertiesPojo;
+import com.pergamon.Pergamnon.v1.entity.Resource;
 import com.pergamon.Pergamnon.v1.exception.ResourceCreationException;
 import com.pergamon.Pergamnon.v1.service.FileStorageService;
 import com.pergamon.Pergamnon.v1.service.ResourceService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -67,5 +71,20 @@ public class ResourceServiceTests {
         Mockito.when(fileDao.save(this.fileProperties)).thenThrow(IOException.class);
 
         this.resourceService.create(this.url);
+    }
+
+    @Test
+    public void testList_WhenNoResources() throws Exception {
+        List<Resource> resources = this.getFilledResourceList();
+        Mockito.when(resourceDao.list()).thenReturn(resources);
+
+        Assert.assertSame(resources, this.resourceService.list());
+    }
+
+    private List<Resource> getFilledResourceList() {
+        List<Resource> resources = new ArrayList<>();
+        resources.add(new Resource());
+
+        return resources;
     }
 }

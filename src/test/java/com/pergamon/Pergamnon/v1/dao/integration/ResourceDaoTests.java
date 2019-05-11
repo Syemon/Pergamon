@@ -7,6 +7,7 @@ import com.pergamon.Pergamnon.v1.entity.File;
 import com.pergamon.Pergamnon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamnon.v1.entity.Resource;
 import org.hibernate.Session;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PergamnonApplication.class)
@@ -53,6 +55,17 @@ public class ResourceDaoTests {
         resourceDao.save(this.getFile(), this.url);
     }
 
+    @Test
+    @Transactional
+    public void testList() throws IOException {
+        Session session = entityManager.unwrap(Session.class);
+        Resource resource = this.getResource();
+
+        List<Resource> resources = resourceDao.list();
+
+        Assert.assertSame(resource, resources.get(0));
+    }
+
     @Transactional
     public File getFile() throws IOException {
         FilePropertiesPojo fileProperties = new FilePropertiesPojo();
@@ -68,5 +81,21 @@ public class ResourceDaoTests {
         session.refresh(file);
 
         return file;
+    }
+
+    @Transactional
+    public Resource getResource() throws IOException {
+        Resource resource = new Resource();
+
+        Session session = entityManager.unwrap(Session.class);
+
+        resource.setUrl("https://example.com");
+        resource.setFile(this.getFile());
+
+        session.save(resource);
+        session.flush();
+        session.refresh(resource);
+
+        return resource;
     }
 }

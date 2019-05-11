@@ -1,6 +1,8 @@
 package com.pergamon.Pergamnon.v1.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pergamon.Pergamnon.v1.entity.Resource;
+import com.pergamon.Pergamnon.v1.resource.ResourceResource;
 import com.pergamon.Pergamnon.v1.service.ResourceService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,11 +13,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ResourceController.class)
@@ -48,5 +50,18 @@ public class ResourceControllerTest {
         this.mockMvc.perform(put(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testList_WhenSuccess() throws Exception {
+        List<Resource> resources = new ArrayList<>();
+        List<ResourceResource> folderResources = new ArrayList<>();
+
+        when(this.resourceService.list()).thenReturn(resources);
+
+        this.mockMvc.perform(get("/api/v1/resources"))
+                .andExpect(status().isOk())
+                .andExpect(
+                        content().contentTypeCompatibleWith("application/hal+json"));
     }
 }
