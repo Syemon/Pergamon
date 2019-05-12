@@ -5,7 +5,6 @@ import com.pergamon.Pergamnon.v1.controller.ResourceController;
 import com.pergamon.Pergamnon.v1.entity.Resource;
 import com.pergamon.Pergamnon.v1.resource.ResourceResource;
 import com.pergamon.Pergamnon.v1.service.ResourceService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -69,6 +68,19 @@ public class ResourceControllerTest {
         when(this.resourceService.list()).thenReturn(resources);
 
         this.mockMvc.perform(get("/api/v1/resources"))
+                .andExpect(status().isOk())
+                .andExpect(
+                        content().contentTypeCompatibleWith("application/hal+json"));
+    }
+
+    @Test
+    public void testList_WithSearchParameter() throws Exception {
+        List<Resource> resources = new ArrayList<>();
+        List<ResourceResource> folderResources = new ArrayList<>();
+
+        when(this.resourceService.list()).thenReturn(resources);
+
+        this.mockMvc.perform(get("/api/v1/resources").param("search", "www"))
                 .andExpect(status().isOk())
                 .andExpect(
                         content().contentTypeCompatibleWith("application/hal+json"));

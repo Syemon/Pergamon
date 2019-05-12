@@ -89,6 +89,22 @@ public class ResourceServiceTests {
     }
 
     @Test
+    public void testList_WhenNoResourcesWithSearch() throws Exception {
+        List<Resource> resources = new ArrayList<>();
+        Mockito.when(resourceDao.list("www")).thenReturn(resources);
+
+        Assert.assertSame(resources, this.resourceService.list("www"));
+    }
+
+    @Test
+    public void testList_WhenWithResourceWithSearch() throws Exception {
+        List<Resource> resources = this.getFilledResourceList();
+        Mockito.when(resourceDao.list("www")).thenReturn(resources);
+
+        Assert.assertSame(resources, this.resourceService.list("www"));
+    }
+
+    @Test
     public void testDownload() {
         when(this.fileDao.findByUrl(any(URL.class))).thenReturn(this.file);
         when(this.fileStorageService.loadFileAsResource(any(String.class))).thenReturn(this.fileResource);
