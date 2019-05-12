@@ -5,17 +5,22 @@ import com.pergamon.Pergamnon.v1.controller.ResourceController;
 import com.pergamon.Pergamnon.v1.entity.Resource;
 import com.pergamon.Pergamnon.v1.resource.ResourceResource;
 import com.pergamon.Pergamnon.v1.service.ResourceService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.net.URL;
 import java.util.*;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,6 +34,9 @@ public class ResourceControllerTest {
     private Map<String, String> body = new HashMap<>();
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    @Mock
+    private ResponseEntity responseEntity;
 
     @MockBean
     private ResourceService resourceService;
@@ -64,5 +72,16 @@ public class ResourceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(
                         content().contentTypeCompatibleWith("application/hal+json"));
+    }
+
+    @Test
+    public void testDownload_WhenResourceNotExist_ReturnError() throws Exception {
+        when(this.resourceService.exists(any(URL.class))).thenReturn(false);
+
+        this.mockMvc.perform(get("/api/v1/resources/downloads?url=https://example.com"))
+                .andExpect(status().isNotFound())
+                .andExpect(
+                        content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("message").value("Resource from given url doesn\'t exist"));
     }
 }

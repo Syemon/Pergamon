@@ -4,6 +4,7 @@ import com.pergamon.Pergamnon.PergamnonApplication;
 import com.pergamon.Pergamnon.v1.dao.FileDao;
 import com.pergamon.Pergamnon.v1.entity.File;
 import com.pergamon.Pergamnon.v1.entity.FilePropertiesPojo;
+import com.pergamon.Pergamnon.v1.entity.Resource;
 import org.hibernate.Session;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
+import java.net.URL;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
@@ -27,7 +29,7 @@ public class FileDaoTests {
     @Autowired
     private FileDao fileDao;
 
-    FilePropertiesPojo fileProperties;
+    private FilePropertiesPojo fileProperties;
 
     @Before
     public void setUp() {
@@ -54,5 +56,53 @@ public class FileDaoTests {
         Assert.assertSame("plain/text", file.getType());
         Assert.assertNotNull(file.getCreatedAt());
         Assert.assertNotNull(file.getId());
+    }
+
+    @Test
+    @Transactional
+    public void testFindByUrl_WhenExists_ReturnFile() throws IOException {
+        Resource resource = this.getResource();
+        URL url = new URL("https://example.com");
+
+        Session session = entityManager.unwrap(Session.class);
+
+        File file = fileDao.findByUrl(url);
+        session.flush();
+        session.refresh(file);
+
+        Assert.assertEquals(resource.getFile(), file);
+    }
+
+    @Transactional
+    public File getFile() throws IOException {
+        FilePropertiesPojo fileProperties = new FilePropertiesPojo();
+        fileProperties
+                .setName("test.txt")
+                .setStorageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
+                .setType("plain/text");
+
+        Session session = entityManager.unwrap(Session.class);
+
+        File file = fileDao.save(fileProperties);
+        session.flush();
+        session.refresh(file);
+
+        return file;
+    }
+
+    @Transactional
+    public Resource getResource() throws IOException {
+        Resource resource = new Resource();
+
+        Session session = entityManager.unwrap(Session.class);
+
+        resource.setUrl("https://example.com");
+        resource.setFile(this.getFile());
+
+        session.save(resource);
+        session.flush();
+        session.refresh(resource);
+
+        return resource;
     }
 }

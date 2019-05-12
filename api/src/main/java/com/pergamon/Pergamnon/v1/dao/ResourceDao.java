@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class ResourceDao {
@@ -29,6 +30,18 @@ public class ResourceDao {
         resource.setFile(file);
 
         session.save(resource);
+    }
+
+    public boolean exists(URL url) {
+        Session session = entityManager.unwrap(Session.class);
+
+        Query query = session.createQuery(
+                "SELECT 1 " +
+                        "FROM Resource " +
+                        "WHERE url=:url");
+
+        return query.setParameter("url", url.toString())
+                .uniqueResult() != null;
     }
 
     public List<Resource> list() {
