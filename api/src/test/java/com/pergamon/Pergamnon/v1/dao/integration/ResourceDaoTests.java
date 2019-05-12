@@ -48,8 +48,6 @@ public class ResourceDaoTests {
     @Test
     @Transactional
     public void testCreate_WhenCorrectData() throws IOException {
-        Mockito.when(url.getPath()).thenReturn("https://example/test.txt");
-
         Session session = entityManager.unwrap(Session.class);
 
         resourceDao.save(this.getFile(), this.url);
@@ -64,6 +62,28 @@ public class ResourceDaoTests {
         List<Resource> resources = resourceDao.list();
 
         Assert.assertSame(resource, resources.get(0));
+    }
+
+    @Test
+    @Transactional
+    public void testExists_WhenNotExists_ReturnFalse() throws IOException {
+        Mockito.when(url.toString()).thenReturn("https://example2.com");
+
+        Session session = entityManager.unwrap(Session.class);
+        Resource resource = this.getResource();
+
+        Assert.assertFalse(this.resourceDao.exists(this.url));
+    }
+
+    @Test
+    @Transactional
+    public void testExists_WhenExists_ReturnTrue() throws IOException {
+        Mockito.when(url.toString()).thenReturn("https://example.com");
+
+        Session session = entityManager.unwrap(Session.class);
+        Resource resource = this.getResource();
+
+        Assert.assertTrue(this.resourceDao.exists(this.url));
     }
 
     @Transactional

@@ -7,6 +7,9 @@ import com.pergamon.Pergamnon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamnon.v1.entity.Resource;
 import com.pergamon.Pergamnon.v1.exception.ResourceCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +46,24 @@ public class ResourceService {
         } catch (IOException exc) {
             throw new ResourceCreationException("There was an error during resource creation", exc);
         }
+    }
+
+    @Transactional
+    public boolean exists(URL url) {
+        return this.resourceDao.exists(url);
+    }
+
+    @Transactional
+    public ResponseEntity<org.springframework.core.io.Resource> download(URL url) {
+        File file = this.fileDao.findByUrl(url);
+
+        org.springframework.core.io.Resource fileResource =  this.fileStorageService.loadFileAsResource(
+                file.getStorageName());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.getType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName())
+                .body(fileResource);
     }
 
     @Transactional

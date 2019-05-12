@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ResourceService.class)
@@ -35,6 +35,9 @@ public class ResourceServiceTests {
 
     @Mock
     private File file;
+
+    @Mock
+    private org.springframework.core.io.Resource fileResource;
 
     @MockBean
     private FileStorageService fileStorageService;
@@ -53,6 +56,10 @@ public class ResourceServiceTests {
     @Before
     public void setUp() {
         this.fileProperties = new FilePropertiesPojo();
+
+        when(this.file.getName()).thenReturn("file.txt");
+        when(this.file.getStorageName()).thenReturn(UUID.randomUUID().toString());
+        when(this.file.getType()).thenReturn("plain/text");
     }
 
     @Test
@@ -79,6 +86,14 @@ public class ResourceServiceTests {
         Mockito.when(resourceDao.list()).thenReturn(resources);
 
         Assert.assertSame(resources, this.resourceService.list());
+    }
+
+    @Test
+    public void testDownload() {
+        when(this.fileDao.findByUrl(any(URL.class))).thenReturn(this.file);
+        when(this.fileStorageService.loadFileAsResource(any(String.class))).thenReturn(this.fileResource);
+
+        this.resourceService.download(this.url);
     }
 
     private List<Resource> getFilledResourceList() {
