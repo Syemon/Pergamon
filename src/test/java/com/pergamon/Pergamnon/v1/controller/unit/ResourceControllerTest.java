@@ -1,6 +1,7 @@
-package com.pergamon.Pergamnon.v1.controller;
+package com.pergamon.Pergamnon.v1.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pergamon.Pergamnon.v1.controller.ResourceController;
 import com.pergamon.Pergamnon.v1.entity.Resource;
 import com.pergamon.Pergamnon.v1.resource.ResourceResource;
 import com.pergamon.Pergamnon.v1.service.ResourceService;

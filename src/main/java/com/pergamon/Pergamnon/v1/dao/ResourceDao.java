@@ -25,7 +25,7 @@ public class ResourceDao {
         Session session = entityManager.unwrap(Session.class);
 
         Resource resource = new Resource();
-        resource.setUrl(url.getPath());
+        resource.setUrl(url.toString());
         resource.setFile(file);
 
         session.save(resource);
@@ -35,7 +35,7 @@ public class ResourceDao {
         Session session = entityManager.unwrap(Session.class);
 
         Query<Resource> query =
-                session.createQuery("FROM Resource AS r", Resource.class);
+                session.createQuery("FROM Resource", Resource.class);
 
         return query.getResultList();
     }
