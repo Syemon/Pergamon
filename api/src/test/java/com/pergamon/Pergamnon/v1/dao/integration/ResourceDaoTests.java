@@ -66,6 +66,37 @@ public class ResourceDaoTests {
 
     @Test
     @Transactional
+    public void testList_WhenSearchingForNotExistentUrl_ReturnEmptyList() throws IOException {
+        Session session = entityManager.unwrap(Session.class);
+        Resource resource = this.getNamedResourceAndFile("https://example.com", "test.txt");
+
+        List<Resource> resources = resourceDao.list("search");
+
+        Assert.assertFalse(resources.contains(resource));
+    }
+
+    @Test
+    @Transactional
+    public void testList_WhenSearchingForExistentUrl_ReturnList() throws IOException {
+        Resource resource = this.getNamedResourceAndFile("https://example.com", "test.txt");
+
+        List<Resource> resources = resourceDao.list("example");
+
+        Assert.assertSame(resource, resources.get(0));
+    }
+
+    @Test
+    @Transactional
+    public void testList_WhenSearchingForExistentUrlWithDifferentCase_ReturnList() throws IOException {
+        Resource resource = this.getNamedResourceAndFile("https://example.com", "test.txt");
+
+        List<Resource> resources = resourceDao.list("eXample");
+
+        Assert.assertSame(resource, resources.get(0));
+    }
+
+    @Test
+    @Transactional
     public void testExists_WhenNotExists_ReturnFalse() throws IOException {
         Mockito.when(url.toString()).thenReturn("https://example2.com");
 
@@ -112,6 +143,28 @@ public class ResourceDaoTests {
         resource.setUrl("https://example.com");
         resource.setFile(this.getFile());
 
+        session.save(resource);
+        session.flush();
+        session.refresh(resource);
+
+        return resource;
+    }
+
+    @Transactional
+    public Resource getNamedResourceAndFile(String url, String fileName) {
+        File file = new File();
+        Resource resource = new Resource();
+
+        file.setName(fileName);
+        file.setStorageName("8d4073ce-17d5-43e1-90a0-62e94fba1402");
+        file.setType("plain/text");
+
+        resource.setUrl(url);
+        resource.setFile(file);
+
+        Session session = entityManager.unwrap(Session.class);
+
+        session.save(file);
         session.save(resource);
         session.flush();
         session.refresh(resource);

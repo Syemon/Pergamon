@@ -70,4 +70,9 @@ public class ResourceService {
     public List<Resource> list() {
         return this.resourceDao.list();
     }
+
+    @Transactional
+    public List<Resource> list(String search) {
+        return this.resourceDao.list(search);
+    }
 }

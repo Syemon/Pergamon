@@ -34,6 +34,15 @@ public class ResourceController {
         return ResponseEntity.accepted().build();
     }
 
+    @GetMapping(value = "/resources", params = {"search"}, produces = { "application/hal+json" })
+    public ResponseEntity<Resources<ResourceResource>> list(@RequestParam(name = "search") String search) throws MalformedURLException {
+        List<Resource> folders = resourceService.list(search);
+
+        return ResponseEntity.ok(
+                ResourceResourceCreator.getResources(folders)
+        );
+    }
+
     @GetMapping(value = "/resources", produces = { "application/hal+json" })
     public ResponseEntity<Resources<ResourceResource>> list() throws MalformedURLException {
         List<Resource> folders = resourceService.list();

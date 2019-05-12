@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public class ResourceDao {
@@ -50,6 +50,22 @@ public class ResourceDao {
         Query<Resource> query =
                 session.createQuery("FROM Resource", Resource.class);
 
+        return query.getResultList();
+    }
+
+    public List<Resource> list(String search) {
+        Session session = entityManager.unwrap(Session.class);
+
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Resource> criteriaQuery = builder.createQuery(Resource.class);
+        Root<Resource> root = criteriaQuery.from(Resource.class);
+
+        criteriaQuery.select(root)
+                .where(builder.like(
+                        builder.lower(root.get("url")),
+                        "%" + search.toLowerCase() + "%"));
+
+        Query<Resource> query = session.createQuery(criteriaQuery);
         return query.getResultList();
     }
 }
