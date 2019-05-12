@@ -2,6 +2,7 @@ package com.pergamon.Pergamnon.v1.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,9 +13,7 @@ import java.util.UUID;
 @Table(name="resource")
 public class Resource {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", columnDefinition = "VARCHAR(255)")
+    @GeneratedValue()
     private UUID id;
 
     @NotNull
