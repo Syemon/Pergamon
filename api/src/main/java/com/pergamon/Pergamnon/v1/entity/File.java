@@ -6,14 +6,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @Table(name="file")
 public class File {
     @Id
     @GeneratedValue()
-    private UUID id;
+    private Integer id;
 
     @NotNull
     @Column(name="name")
@@ -37,7 +36,7 @@ public class File {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 

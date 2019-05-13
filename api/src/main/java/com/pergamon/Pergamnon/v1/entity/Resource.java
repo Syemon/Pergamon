@@ -5,14 +5,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @Table(name="resource")
 public class Resource {
     @Id
     @GeneratedValue()
-    private UUID id;
+    private Integer id;
 
     @NotNull
     @OneToOne()
@@ -28,7 +27,7 @@ public class Resource {
     @Column(name = "created_at")
     private Date createdAt;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 

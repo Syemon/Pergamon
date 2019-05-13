@@ -12,6 +12,7 @@ import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,7 +30,7 @@ public class ResourceController {
     }
 
     @PutMapping(value = "/resources")
-    public ResponseEntity upsert(@RequestBody ResourceRequest resourceRequest) throws IOException {
+    public ResponseEntity upsert(@Valid @RequestBody ResourceRequest resourceRequest) throws IOException {
         try {
             resourceRequest.getUrl().openConnection().connect();
         } catch (Exception exc) {

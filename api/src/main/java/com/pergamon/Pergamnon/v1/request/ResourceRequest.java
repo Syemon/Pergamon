@@ -7,7 +7,6 @@ public class ResourceRequest {
     private URL url;
 
     @NotNull
-    @org.hibernate.validator.constraints.URL
     public URL getUrl() {
         return url;
     }
