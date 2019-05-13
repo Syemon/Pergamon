@@ -19,7 +19,7 @@ public class PergamnonApplication {
 	@Bean("threadPoolTaskExecutor")
 	public TaskExecutor getAsyncExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(20);
+		executor.setCorePoolSize(1);
 		executor.setMaxPoolSize(1000);
 		executor.setWaitForTasksToCompleteOnShutdown(true);
 		executor.setThreadNamePrefix("Async-");

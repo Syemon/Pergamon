@@ -52,7 +52,7 @@ public class ResourceControllerTest {
         this.mockMvc.perform(put(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("message").value("Invalid data"));;
+                .andExpect(jsonPath("message").value("Invalid data"));
     }
 
     @Test
@@ -65,6 +65,16 @@ public class ResourceControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message")
                         .value("It's impossible to connect to given resource. Check given URL or try again later"));
+    }
+
+    @Test
+    public void testUpsert_WhenEmptyBodyProvided_ReturnError() throws Exception {
+        String jsonBody = mapper.writeValueAsString(body);
+        this.mockMvc.perform(put(
+                "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("message")
+                        .value("url: must not be null"));
     }
 
     @Test
