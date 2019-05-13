@@ -32,7 +32,7 @@ public class FileStorageService {
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
-            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
+            throw new IllegalArgumentException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
 
@@ -72,14 +72,6 @@ public class FileStorageService {
 
         return file.setName(fileName)
             .setType(url.openConnection().getContentType());
-    }
-
-    public void deleteFile(String storedFileName) {
-        try {
-            Files.delete(fileStorageLocation.resolve(storedFileName));
-        } catch (IOException ex) {
-            throw new FileStorageException("Could not delete file", ex);
-        }
     }
 
     public Resource loadFileAsResource(String fileName) {

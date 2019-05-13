@@ -48,6 +48,28 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<ApiErrorResponse> handleException(IllegalArgumentException exc) {
+        ApiErrorResponse error = new ApiErrorResponse();
+
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setMessage(exc.getMessage());
+        error.setTimestamp(System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ApiErrorResponse> handleException(FileStorageException exc) {
+        ApiErrorResponse error = new ApiErrorResponse();
+
+        error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setMessage(exc.getMessage());
+        error.setTimestamp(System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ApiErrorResponse> handleException(MethodArgumentNotValidException exc) {
         ApiErrorResponse error = new ApiErrorResponse();
 
