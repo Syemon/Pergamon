@@ -64,26 +64,18 @@ public class ResourceServiceTests {
 
     @Test
     public void testCreate_WhenCorrectData() throws Exception {
-        Mockito.when(fileStorageService.storeFile(Mockito.any(URL.class))).thenReturn(this.fileProperties);
-        Mockito.when(fileDao.save(this.fileProperties)).thenReturn(this.file);
+        when(fileStorageService.storeFile(any(URL.class))).thenReturn(this.fileProperties);
+        when(fileDao.save(this.fileProperties)).thenReturn(this.file);
 
         this.resourceService.create(this.url);
 
         verify(this.resourceDao, times(1)).save(this.file, this.url);
     }
 
-    @Test(expected = ResourceCreationException.class)
-    public void testCreate_WhenThrowedIOException_ReturnException() throws Exception {
-        Mockito.when(fileStorageService.storeFile(Mockito.any(URL.class))).thenReturn(this.fileProperties);
-        Mockito.when(fileDao.save(this.fileProperties)).thenThrow(IOException.class);
-
-        this.resourceService.create(this.url);
-    }
-
     @Test
     public void testList_WhenNoResources() throws Exception {
         List<Resource> resources = this.getFilledResourceList();
-        Mockito.when(resourceDao.list()).thenReturn(resources);
+        when(resourceDao.list()).thenReturn(resources);
 
         Assert.assertSame(resources, this.resourceService.list());
     }
@@ -91,7 +83,7 @@ public class ResourceServiceTests {
     @Test
     public void testList_WhenNoResourcesWithSearch() throws Exception {
         List<Resource> resources = new ArrayList<>();
-        Mockito.when(resourceDao.list("www")).thenReturn(resources);
+        when(resourceDao.list("www")).thenReturn(resources);
 
         Assert.assertSame(resources, this.resourceService.list("www"));
     }
@@ -99,7 +91,7 @@ public class ResourceServiceTests {
     @Test
     public void testList_WhenWithResourceWithSearch() throws Exception {
         List<Resource> resources = this.getFilledResourceList();
-        Mockito.when(resourceDao.list("www")).thenReturn(resources);
+        when(resourceDao.list("www")).thenReturn(resources);
 
         Assert.assertSame(resources, this.resourceService.list("www"));
     }
@@ -114,7 +106,7 @@ public class ResourceServiceTests {
 
     @Test
     public void testUpdate_WhenCorrectData() throws Exception {
-        Mockito.when(this.fileDao.findByUrl(this.url)).thenReturn(this.file);
+        when(this.fileDao.findByUrl(this.url)).thenReturn(this.file);
 
         this.resourceService.update(this.url);
 

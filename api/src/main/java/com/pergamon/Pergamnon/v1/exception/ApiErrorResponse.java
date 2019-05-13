@@ -6,7 +6,6 @@ public class ApiErrorResponse {
     private long timestamp;
 
     public ApiErrorResponse() {
-
     }
 
     public ApiErrorResponse(int status, String message, long timestamp) {

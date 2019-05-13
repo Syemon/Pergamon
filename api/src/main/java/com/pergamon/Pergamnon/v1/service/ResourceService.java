@@ -46,13 +46,13 @@ public class ResourceService {
     }
 
     @Transactional(rollbackFor = IOException.class)
-    public void create(URL url) throws IOException {
+    public void create(URL url) {
         FilePropertiesPojo filePropertiesPojo = this.fileStorageService.storeFile(url);
 
         try {
             File file = this.fileDao.save(filePropertiesPojo);
             this.resourceDao.save(file, url);
-        } catch (IOException exc) {
+        } catch (Exception exc) {
             throw new ResourceCreationException("There was an error during resource creation", exc);
         }
     }

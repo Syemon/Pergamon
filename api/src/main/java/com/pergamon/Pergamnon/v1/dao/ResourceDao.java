@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class ResourceDao {
         this.entityManager = entityManager;
     }
 
-    public void save(File file, URL url) throws IOException {
+    public void save(File file, URL url) {
         Session session = entityManager.unwrap(Session.class);
 
         Resource resource = new Resource();

@@ -3,16 +3,13 @@ package com.pergamon.Pergamnon.v1.controller.unit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pergamon.Pergamnon.v1.controller.ResourceController;
 import com.pergamon.Pergamnon.v1.entity.Resource;
-import com.pergamon.Pergamnon.v1.resource.ResourceResource;
 import com.pergamon.Pergamnon.v1.service.ResourceService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -33,9 +30,6 @@ public class ResourceControllerTest {
     private Map<String, String> body = new HashMap<>();
 
     private ObjectMapper mapper = new ObjectMapper();
-
-    @Mock
-    private ResponseEntity responseEntity;
 
     @MockBean
     private ResourceService resourceService;
@@ -63,7 +57,6 @@ public class ResourceControllerTest {
     @Test
     public void testList_WhenSuccess() throws Exception {
         List<Resource> resources = new ArrayList<>();
-        List<ResourceResource> folderResources = new ArrayList<>();
 
         when(this.resourceService.list()).thenReturn(resources);
 
@@ -76,7 +69,6 @@ public class ResourceControllerTest {
     @Test
     public void testList_WithSearchParameter() throws Exception {
         List<Resource> resources = new ArrayList<>();
-        List<ResourceResource> folderResources = new ArrayList<>();
 
         when(this.resourceService.list()).thenReturn(resources);
 

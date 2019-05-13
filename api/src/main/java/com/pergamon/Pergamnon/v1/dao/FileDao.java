@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.io.IOException;
 import java.net.URL;
 
 @Repository
@@ -23,7 +22,7 @@ public class FileDao {
         this.fileStorageProperties = fileStorageProperties;
     }
 
-    public File save(FilePropertiesPojo filePropertiesPojo) throws IOException {
+    public File save(FilePropertiesPojo filePropertiesPojo) {
         Session session = entityManager.unwrap(Session.class);
 
         File file = new File();
@@ -46,7 +45,11 @@ public class FileDao {
         Session session = entityManager.unwrap(Session.class);
 
         Query<File> query =
-                session.createQuery("SELECT f FROM Resource AS r INNER JOIN File AS f ON r.file = f WHERE r.url =:url ", File.class);
+                session.createQuery("SELECT f " +
+                        "FROM Resource AS r " +
+                        "INNER JOIN File AS f " +
+                        "ON r.file = f " +
+                        "WHERE r.url =:url", File.class);
 
         return query.setParameter("url", url.toString()).getSingleResult();
     }
