@@ -35,8 +35,17 @@ public class ResourceService {
         this.resourceDao = resourceDao;
     }
 
-    @Transactional(rollbackFor = IOException.class)
     @Async("threadPoolTaskExecutor")
+    @Transactional
+    public void upsert(URL url) throws IOException {
+        if (this.resourceDao.exists(url)) {
+            this.update(url);
+        } else {
+            this.create(url);
+        }
+    }
+
+    @Transactional(rollbackFor = IOException.class)
     public void create(URL url) throws IOException {
         FilePropertiesPojo filePropertiesPojo = this.fileStorageService.storeFile(url);
 
@@ -46,6 +55,14 @@ public class ResourceService {
         } catch (IOException exc) {
             throw new ResourceCreationException("There was an error during resource creation", exc);
         }
+    }
+
+    @Transactional
+    public void update(URL url) throws IOException {
+        File file = this.fileDao.findByUrl(url);
+        File updateFile = this.fileStorageService.updateFile(url, file);
+
+        this.fileDao.update(updateFile);
     }
 
     @Transactional
