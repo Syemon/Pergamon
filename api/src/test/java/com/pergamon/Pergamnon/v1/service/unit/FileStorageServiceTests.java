@@ -17,8 +17,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static org.mockito.Mockito.*;
 
@@ -38,7 +36,6 @@ public class FileStorageServiceTests {
     @Mock
     private FilenameUtils filenameUtils = new FilenameUtils();
 
-
     @Test
     public void testStoreFile() throws Exception {
         InputStream inputStream = new ByteArrayInputStream("test".getBytes());
@@ -52,15 +49,5 @@ public class FileStorageServiceTests {
         Assert.assertEquals(fileProperties.getName(), "test.txt");
         Assert.assertTrue(fileProperties.getStorageName()
                 .matches("[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}"));
-    }
-
-    @Test
-    public void testDeleteFile() throws Exception {
-        Files.createFile(Paths.get("test_uploads/testDelete.txt"));
-
-        fileStorageService.deleteFile("testDelete.txt");
-
-        boolean exists = Files.exists(Paths.get("test_uploads/testDelete.txt"));
-        Assert.assertFalse(exists);
     }
 }
