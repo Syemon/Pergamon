@@ -49,7 +49,7 @@ public class FileDao {
                         "FROM Resource AS r " +
                         "INNER JOIN File AS f " +
                         "ON r.file = f " +
-                        "WHERE r.url =:url", File.class);
+                        "WHERE r.url = :url", File.class);
 
         return query.setParameter("url", url.toString()).getSingleResult();
     }

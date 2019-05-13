@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +26,9 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = PergamnonApplication.class)
 @AutoConfigureMockMvc()
 public class FileStorageServiceTests {
+    @Autowired
+    private FileStorageService fileStorageService;
+
     @Mock
     private URL url;
 
@@ -36,8 +38,6 @@ public class FileStorageServiceTests {
     @Mock
     private FilenameUtils filenameUtils = new FilenameUtils();
 
-    @Autowired
-    private FileStorageService fileStorageService;
 
     @Test
     public void testStoreFile() throws Exception {

@@ -19,13 +19,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PergamnonApplication.class)
 public class ResourceDaoTests {
+    private Resource resource;
+
     @Autowired
     private EntityManager entityManager;
 
@@ -38,8 +39,6 @@ public class ResourceDaoTests {
     @Mock
     private URL url;
 
-    private Resource resource;
-
     @Before
     public void setUp() {
         this.resource = new Resource();
@@ -47,7 +46,7 @@ public class ResourceDaoTests {
 
     @Test
     @Transactional
-    public void testCreate_WhenCorrectData() throws IOException {
+    public void testCreate_WhenCorrectData() {
         Session session = entityManager.unwrap(Session.class);
 
         resourceDao.save(this.getFile(), this.url);
@@ -55,7 +54,7 @@ public class ResourceDaoTests {
 
     @Test
     @Transactional
-    public void testList() throws IOException {
+    public void testList() {
         Resource resource = this.getResource();
 
         List<Resource> resources = resourceDao.list();
@@ -95,7 +94,7 @@ public class ResourceDaoTests {
 
     @Test
     @Transactional
-    public void testExists_WhenNotExists_ReturnFalse() throws IOException {
+    public void testExists_WhenNotExists_ReturnFalse() {
         Mockito.when(url.toString()).thenReturn("https://example2.com");
 
         Resource resource = this.getResource();
@@ -105,7 +104,7 @@ public class ResourceDaoTests {
 
     @Test
     @Transactional
-    public void testExists_WhenExists_ReturnTrue() throws IOException {
+    public void testExists_WhenExists_ReturnTrue() {
         Mockito.when(url.toString()).thenReturn("https://example.com");
 
         Resource resource = this.getResource();
