@@ -1,5 +1,6 @@
 package com.pergamon.Pergamnon.v1.service;
 
+import com.pergamon.Pergamnon.v1.entity.File;
 import com.pergamon.Pergamnon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamnon.v1.exception.FileNotFoundException;
 import com.pergamon.Pergamnon.v1.exception.FileStorageException;
@@ -57,6 +58,20 @@ public class FileStorageService {
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
+    }
+
+    public File updateFile(URL url, File file) throws IOException {
+        Path targetLocation = this.fileStorageLocation.resolve(file.getStorageName());
+        String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
+
+        try {
+            Files.copy(url.openStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ex) {
+            throw new FileStorageException("An error has occurred during file update!", ex);
+        }
+
+        return file.setName(fileName)
+            .setType(url.openConnection().getContentType());
     }
 
     public void deleteFile(String storedFileName) {

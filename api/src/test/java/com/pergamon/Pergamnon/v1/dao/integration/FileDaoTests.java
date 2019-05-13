@@ -73,6 +73,25 @@ public class FileDaoTests {
         Assert.assertEquals(resource.getFile(), file);
     }
 
+    @Test
+    @Transactional
+    public void testUpdate() throws IOException {
+        File file = this.getFile();
+
+        file.setName("new_name");
+        file.setStorageName("lorem ipsum");
+        file.setType("plain/html");
+        Session session = entityManager.unwrap(Session.class);
+
+        this.fileDao.update(file);
+        session.flush();
+        session.refresh(file);
+
+        Assert.assertEquals(file.getName(), "new_name");
+        Assert.assertEquals(file.getStorageName(), "lorem ipsum");
+        Assert.assertEquals(file.getType(), "plain/html");
+    }
+
     @Transactional
     public File getFile() throws IOException {
         FilePropertiesPojo fileProperties = new FilePropertiesPojo();

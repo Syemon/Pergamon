@@ -112,6 +112,15 @@ public class ResourceServiceTests {
         this.resourceService.download(this.url);
     }
 
+    @Test
+    public void testUpdate_WhenCorrectData() throws Exception {
+        Mockito.when(this.fileDao.findByUrl(this.url)).thenReturn(this.file);
+
+        this.resourceService.update(this.url);
+
+        verify(this.fileStorageService, atLeastOnce()).updateFile(this.url, this.file);
+    }
+
     private List<Resource> getFilledResourceList() {
         List<Resource> resources = new ArrayList<>();
         resources.add(new Resource());

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
@@ -28,8 +27,8 @@ public class ResourceController {
     }
 
     @PutMapping(value = "/resources")
-    public ResponseEntity create(@RequestBody ResourceRequest resourceRequest) throws IOException, URISyntaxException {
-        resourceService.create(resourceRequest.getUrl());
+    public ResponseEntity upsert(@RequestBody ResourceRequest resourceRequest) throws IOException {
+        resourceService.upsert(resourceRequest.getUrl());
 
         return ResponseEntity.accepted().build();
     }

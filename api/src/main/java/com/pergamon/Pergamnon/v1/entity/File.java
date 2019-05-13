@@ -47,24 +47,30 @@ public class File {
         return name;
     }
 
-    public void setName(String name) {
+    public File setName(String name) {
         this.name = name;
+
+        return this;
     }
 
     public String getStorageName() {
         return storageName;
     }
 
-    public void setStorageName(String storageName) {
+    public File setStorageName(String storageName) {
         this.storageName = storageName;
+
+        return this;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public File setType(String type) {
         this.type = type;
+
+        return this;
     }
 
     public Date getCreatedAt() {
