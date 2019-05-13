@@ -1,6 +1,7 @@
 package com.pergamon.Pergamnon.v1.controller;
 
 import com.pergamon.Pergamnon.v1.entity.Resource;
+import com.pergamon.Pergamnon.v1.exception.ResourceConnectionException;
 import com.pergamon.Pergamnon.v1.exception.ResourceNotFoundException;
 import com.pergamon.Pergamnon.v1.request.ResourceRequest;
 import com.pergamon.Pergamnon.v1.resource.ResourceResource;
@@ -28,6 +29,12 @@ public class ResourceController {
 
     @PutMapping(value = "/resources")
     public ResponseEntity upsert(@RequestBody ResourceRequest resourceRequest) throws IOException {
+        try {
+            resourceRequest.getUrl().openConnection().connect();
+        } catch (Exception exc) {
+            throw new ResourceConnectionException("It's impossible to connect to given resource. Check given URL or try again later");
+        }
+
         resourceService.upsert(resourceRequest.getUrl());
 
         return ResponseEntity.accepted().build();

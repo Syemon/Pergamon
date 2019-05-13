@@ -35,7 +35,7 @@ public class ResourceControllerTest {
     private ResourceService resourceService;
 
     @Test
-    public void testCreate_WhenCorrectUrl() throws Exception {
+    public void testUpsert_WhenCorrectUrl() throws Exception {
         this.body.put("url", "https://example.com");
         String jsonBody = mapper.writeValueAsString(body);
 
@@ -45,13 +45,26 @@ public class ResourceControllerTest {
     }
 
     @Test
-    public void testCreate_WhenIncorrectUrl_ReturnError() throws Exception {
+    public void testUpsert_WhenIncorrectUrl_ReturnError() throws Exception {
         this.body.put("url", "lorem");
         String jsonBody = mapper.writeValueAsString(body);
 
         this.mockMvc.perform(put(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("message").value("Invalid data"));;
+    }
+
+    @Test
+    public void testUpsert_WhenCannotConnect_ReturnError() throws Exception {
+        this.body.put("url", "https://y.com");
+        String jsonBody = mapper.writeValueAsString(body);
+
+        this.mockMvc.perform(put(
+                "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("message")
+                        .value("It's impossible to connect to given resource. Check given URL or try again later"));
     }
 
     @Test

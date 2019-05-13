@@ -37,6 +37,17 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<ApiErrorResponse> handleException(ResourceConnectionException exc) {
+        ApiErrorResponse error = new ApiErrorResponse();
+
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setMessage(exc.getMessage());
+        error.setTimestamp(System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ApiErrorResponse> handleException(MethodArgumentNotValidException exc) {
         ApiErrorResponse error = new ApiErrorResponse();
 
@@ -66,7 +77,7 @@ public class ApiExceptionHandler {
         ApiErrorResponse error = new ApiErrorResponse();
 
         error.setStatus(HttpStatus.BAD_REQUEST.value());
-        error.setMessage("Data is required");
+        error.setMessage("Invalid data");
         error.setTimestamp(System.currentTimeMillis());
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
