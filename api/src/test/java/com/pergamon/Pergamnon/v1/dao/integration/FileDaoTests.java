@@ -22,13 +22,13 @@ import java.net.URL;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PergamnonApplication.class)
 public class FileDaoTests {
+    private FilePropertiesPojo fileProperties;
+
     @Autowired
     private EntityManager entityManager;
 
     @Autowired
     private FileDao fileDao;
-
-    private FilePropertiesPojo fileProperties;
 
     @Before
     public void setUp() {
@@ -37,7 +37,7 @@ public class FileDaoTests {
 
     @Test
     @Transactional
-    public void testCreate_WhenCorrectData_ReturnFile() throws IOException {
+    public void testCreate_WhenCorrectData_ReturnFile() {
         this.fileProperties
                 .setName("test.txt")
                 .setStorageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")

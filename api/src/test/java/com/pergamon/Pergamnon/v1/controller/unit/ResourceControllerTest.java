@@ -24,12 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(ResourceController.class)
 public class ResourceControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-
     private Map<String, String> body = new HashMap<>();
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @MockBean
     private ResourceService resourceService;
