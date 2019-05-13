@@ -21,6 +21,8 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static org.mockito.Mockito.*;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PergamnonApplication.class)
 @AutoConfigureMockMvc()
@@ -40,10 +42,10 @@ public class FileStorageServiceTests {
     @Test
     public void testStoreFile() throws Exception {
         InputStream inputStream = new ByteArrayInputStream("test".getBytes());
-        Mockito.when(url.getPath()).thenReturn("https://example/test.txt");
-        Mockito.when(url.openStream()).thenReturn(inputStream);
-        Mockito.when(url.openConnection()).thenReturn(this.urlConnection);
-        Mockito.when(this.urlConnection.getContentType()).thenReturn("plain/text");
+        when(url.getPath()).thenReturn("https://example/test.txt");
+        when(url.openStream()).thenReturn(inputStream);
+        when(url.openConnection()).thenReturn(this.urlConnection);
+        when(this.urlConnection.getContentType()).thenReturn("plain/text");
 
         FilePropertiesPojo fileProperties = fileStorageService.storeFile(this.url);
 

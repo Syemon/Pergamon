@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.net.URL;
-import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PergamnonApplication.class)
@@ -39,7 +38,6 @@ public class FileDaoTests {
     @Test
     @Transactional
     public void testCreate_WhenCorrectData_ReturnFile() throws IOException {
-        String storageName = UUID.randomUUID().toString();
         this.fileProperties
                 .setName("test.txt")
                 .setStorageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
@@ -75,7 +73,7 @@ public class FileDaoTests {
 
     @Test
     @Transactional
-    public void testUpdate() throws IOException {
+    public void testUpdate() {
         File file = this.getFile();
 
         file.setName("new_name");
@@ -93,7 +91,7 @@ public class FileDaoTests {
     }
 
     @Transactional
-    public File getFile() throws IOException {
+    public File getFile() {
         FilePropertiesPojo fileProperties = new FilePropertiesPojo();
         fileProperties
                 .setName("test.txt")
@@ -110,7 +108,7 @@ public class FileDaoTests {
     }
 
     @Transactional
-    public Resource getResource() throws IOException {
+    public Resource getResource() {
         Resource resource = new Resource();
 
         Session session = entityManager.unwrap(Session.class);
