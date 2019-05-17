@@ -36,20 +36,20 @@ public class ResourceControllerTest {
 
     @Test
     public void testUpsert_WhenCorrectUrl() throws Exception {
-        this.body.put("url", "https://example.com");
+        body.put("url", "https://example.com");
         String jsonBody = mapper.writeValueAsString(body);
 
-        this.mockMvc.perform(put(
+        mockMvc.perform(put(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
     }
 
     @Test
     public void testUpsert_WhenIncorrectUrl_ReturnError() throws Exception {
-        this.body.put("url", "lorem");
+        body.put("url", "lorem");
         String jsonBody = mapper.writeValueAsString(body);
 
-        this.mockMvc.perform(put(
+        mockMvc.perform(put(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message").value("Invalid data"));
@@ -57,10 +57,10 @@ public class ResourceControllerTest {
 
     @Test
     public void testUpsert_WhenCannotConnect_ReturnError() throws Exception {
-        this.body.put("url", "https://y.com");
+        body.put("url", "https://y.com");
         String jsonBody = mapper.writeValueAsString(body);
 
-        this.mockMvc.perform(put(
+        mockMvc.perform(put(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message")
@@ -70,7 +70,7 @@ public class ResourceControllerTest {
     @Test
     public void testUpsert_WhenEmptyBodyProvided_ReturnError() throws Exception {
         String jsonBody = mapper.writeValueAsString(body);
-        this.mockMvc.perform(put(
+        mockMvc.perform(put(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message")
@@ -81,9 +81,9 @@ public class ResourceControllerTest {
     public void testList_WhenSuccess() throws Exception {
         List<Resource> resources = new ArrayList<>();
 
-        when(this.resourceService.list()).thenReturn(resources);
+        when(resourceService.list()).thenReturn(resources);
 
-        this.mockMvc.perform(get("/api/v1/resources"))
+        mockMvc.perform(get("/api/v1/resources"))
                 .andExpect(status().isOk())
                 .andExpect(
                         content().contentTypeCompatibleWith("application/hal+json"));
@@ -93,9 +93,9 @@ public class ResourceControllerTest {
     public void testList_WithSearchParameter() throws Exception {
         List<Resource> resources = new ArrayList<>();
 
-        when(this.resourceService.list()).thenReturn(resources);
+        when(resourceService.list()).thenReturn(resources);
 
-        this.mockMvc.perform(get("/api/v1/resources").param("search", "www"))
+        mockMvc.perform(get("/api/v1/resources").param("search", "www"))
                 .andExpect(status().isOk())
                 .andExpect(
                         content().contentTypeCompatibleWith("application/hal+json"));
@@ -103,9 +103,9 @@ public class ResourceControllerTest {
 
     @Test
     public void testDownload_WhenResourceNotExist_ReturnError() throws Exception {
-        when(this.resourceService.exists(any(URL.class))).thenReturn(false);
+        when(resourceService.exists(any(URL.class))).thenReturn(false);
 
-        this.mockMvc.perform(get("/api/v1/resources/downloads?url=https://example.com"))
+        mockMvc.perform(get("/api/v1/resources/downloads?url=https://example.com"))
                 .andExpect(status().isNotFound())
                 .andExpect(
                         content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

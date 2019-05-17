@@ -41,7 +41,7 @@ public class ResourceDaoTests {
 
     @Before
     public void setUp() {
-        this.resource = new Resource();
+        resource = new Resource();
     }
 
     @Test
@@ -49,13 +49,13 @@ public class ResourceDaoTests {
     public void testCreate_WhenCorrectData() {
         Session session = entityManager.unwrap(Session.class);
 
-        resourceDao.save(this.getFile(), this.url);
+        resourceDao.save(getFile(), url);
     }
 
     @Test
     @Transactional
     public void testList() {
-        Resource resource = this.getResource();
+        Resource resource = getResource();
 
         List<Resource> resources = resourceDao.list();
 
@@ -65,7 +65,7 @@ public class ResourceDaoTests {
     @Test
     @Transactional
     public void testList_WhenSearchingForNotExistentUrl_ReturnEmptyList() {
-        Resource resource = this.getNamedResourceAndFile("https://example.com", "test.txt");
+        Resource resource = getNamedResourceAndFile("https://example.com", "test.txt");
 
         List<Resource> resources = resourceDao.list("search");
 
@@ -75,7 +75,7 @@ public class ResourceDaoTests {
     @Test
     @Transactional
     public void testList_WhenSearchingForExistentUrl_ReturnList() {
-        Resource resource = this.getNamedResourceAndFile("https://example.com", "test.txt");
+        Resource resource = getNamedResourceAndFile("https://example.com", "test.txt");
 
         List<Resource> resources = resourceDao.list("example");
 
@@ -85,7 +85,7 @@ public class ResourceDaoTests {
     @Test
     @Transactional
     public void testList_WhenSearchingForExistentUrlWithDifferentCase_ReturnList() {
-        Resource resource = this.getNamedResourceAndFile("https://example.com", "test.txt");
+        Resource resource = getNamedResourceAndFile("https://example.com", "test.txt");
 
         List<Resource> resources = resourceDao.list("eXample");
 
@@ -97,9 +97,9 @@ public class ResourceDaoTests {
     public void testExists_WhenNotExists_ReturnFalse() {
         Mockito.when(url.toString()).thenReturn("https://example2.com");
 
-        Resource resource = this.getResource();
+        Resource resource = getResource();
 
-        Assert.assertFalse(this.resourceDao.exists(this.url));
+        Assert.assertFalse(resourceDao.exists(url));
     }
 
     @Test
@@ -107,9 +107,9 @@ public class ResourceDaoTests {
     public void testExists_WhenExists_ReturnTrue() {
         Mockito.when(url.toString()).thenReturn("https://example.com");
 
-        Resource resource = this.getResource();
+        Resource resource = getResource();
 
-        Assert.assertTrue(this.resourceDao.exists(this.url));
+        Assert.assertTrue(resourceDao.exists(url));
     }
 
     @Transactional
@@ -136,7 +136,7 @@ public class ResourceDaoTests {
         Session session = entityManager.unwrap(Session.class);
 
         resource.setUrl("https://example.com");
-        resource.setFile(this.getFile());
+        resource.setFile(getFile());
 
         session.save(resource);
         session.flush();

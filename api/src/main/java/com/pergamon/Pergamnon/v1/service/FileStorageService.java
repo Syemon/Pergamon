@@ -27,10 +27,10 @@ public class FileStorageService {
 
     @Autowired
     public FileStorageService(FileStorageProperties fileStorageProperties) {
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
+        fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
                 .toAbsolutePath().normalize();
         try {
-            Files.createDirectories(this.fileStorageLocation);
+            Files.createDirectories(fileStorageLocation);
         } catch (Exception ex) {
             throw new IllegalArgumentException("Could not create the directory where the uploaded files will be stored.", ex);
         }
@@ -51,7 +51,7 @@ public class FileStorageService {
                     .setStorageName(storedFileName)
                     .setType(url.openConnection().getContentType());
 
-            Path targetLocation = this.fileStorageLocation.resolve(storedFileName);
+            Path targetLocation = fileStorageLocation.resolve(storedFileName);
             Files.copy(url.openStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             return filePropertiesPojo;
@@ -61,7 +61,7 @@ public class FileStorageService {
     }
 
     public File updateFile(URL url, File file) throws IOException {
-        Path targetLocation = this.fileStorageLocation.resolve(file.getStorageName());
+        Path targetLocation = fileStorageLocation.resolve(file.getStorageName());
         String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
 
         try {
@@ -76,7 +76,7 @@ public class FileStorageService {
 
     public Resource loadFileAsResource(String fileName) {
         try {
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Path filePath = fileStorageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) {
                 return resource;

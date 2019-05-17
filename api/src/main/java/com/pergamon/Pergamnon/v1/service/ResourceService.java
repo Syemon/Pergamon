@@ -38,20 +38,20 @@ public class ResourceService {
     @Async("threadPoolTaskExecutor")
     @Transactional
     public void upsert(URL url) throws IOException {
-        if (this.resourceDao.exists(url)) {
-            this.update(url);
+        if (resourceDao.exists(url)) {
+            update(url);
         } else {
-            this.create(url);
+            create(url);
         }
     }
 
     @Transactional(rollbackFor = IOException.class)
     public void create(URL url) {
-        FilePropertiesPojo filePropertiesPojo = this.fileStorageService.storeFile(url);
+        FilePropertiesPojo filePropertiesPojo = fileStorageService.storeFile(url);
 
         try {
-            File file = this.fileDao.save(filePropertiesPojo);
-            this.resourceDao.save(file, url);
+            File file = fileDao.save(filePropertiesPojo);
+            resourceDao.save(file, url);
         } catch (Exception exc) {
             throw new ResourceCreationException("There was an error during resource creation", exc);
         }
@@ -59,22 +59,22 @@ public class ResourceService {
 
     @Transactional
     public void update(URL url) throws IOException {
-        File file = this.fileDao.findByUrl(url);
-        File updateFile = this.fileStorageService.updateFile(url, file);
+        File file = fileDao.findByUrl(url);
+        File updateFile = fileStorageService.updateFile(url, file);
 
-        this.fileDao.update(updateFile);
+        fileDao.update(updateFile);
     }
 
     @Transactional
     public boolean exists(URL url) {
-        return this.resourceDao.exists(url);
+        return resourceDao.exists(url);
     }
 
     @Transactional
     public ResponseEntity<org.springframework.core.io.Resource> download(URL url) {
-        File file = this.fileDao.findByUrl(url);
+        File file = fileDao.findByUrl(url);
 
-        org.springframework.core.io.Resource fileResource =  this.fileStorageService.loadFileAsResource(
+        org.springframework.core.io.Resource fileResource =  fileStorageService.loadFileAsResource(
                 file.getStorageName());
 
         return ResponseEntity.ok()
@@ -85,11 +85,11 @@ public class ResourceService {
 
     @Transactional
     public List<Resource> list() {
-        return this.resourceDao.list();
+        return resourceDao.list();
     }
 
     @Transactional
     public List<Resource> list(String search) {
-        return this.resourceDao.list(search);
+        return resourceDao.list(search);
     }
 }
