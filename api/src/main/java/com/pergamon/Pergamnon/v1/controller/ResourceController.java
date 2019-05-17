@@ -33,7 +33,7 @@ public class ResourceController {
     public ResponseEntity upsert(@Valid @RequestBody ResourceRequest resourceRequest) throws IOException {
         try {
             resourceRequest.getUrl().openConnection().connect();
-        } catch (Exception exc) {
+        } catch (IOException exc) {
             throw new ResourceConnectionException("It's impossible to connect to given resource. Check given URL or try again later");
         }
 
