@@ -46,7 +46,7 @@ public class FileDaoTests {
         Session session = entityManager.unwrap(Session.class);
 
         File file = fileDao.save(fileProperties);
-        session.flush();
+        session.getTransaction().commit();
         session.refresh(file);
 
         Assert.assertSame("test.txt", file.getName());
@@ -65,7 +65,8 @@ public class FileDaoTests {
         Session session = entityManager.unwrap(Session.class);
 
         File file = fileDao.findByUrl(url);
-        session.flush();
+        
+        session.getTransaction().commit();
         session.refresh(file);
 
         Assert.assertEquals(resource.getFile(), file);
@@ -82,7 +83,7 @@ public class FileDaoTests {
         Session session = entityManager.unwrap(Session.class);
 
         fileDao.update(file);
-        session.flush();
+        session.getTransaction().commit();
         session.refresh(file);
 
         Assert.assertEquals(file.getName(), "new_name");
