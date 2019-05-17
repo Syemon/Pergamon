@@ -41,10 +41,10 @@ public class FileStorageServiceTests {
         InputStream inputStream = new ByteArrayInputStream("test".getBytes());
         when(url.getPath()).thenReturn("https://example/test.txt");
         when(url.openStream()).thenReturn(inputStream);
-        when(url.openConnection()).thenReturn(this.urlConnection);
-        when(this.urlConnection.getContentType()).thenReturn("plain/text");
+        when(url.openConnection()).thenReturn(urlConnection);
+        when(urlConnection.getContentType()).thenReturn("plain/text");
 
-        FilePropertiesPojo fileProperties = fileStorageService.storeFile(this.url);
+        FilePropertiesPojo fileProperties = fileStorageService.storeFile(url);
 
         Assert.assertEquals(fileProperties.getName(), "test.txt");
         Assert.assertTrue(fileProperties.getStorageName()

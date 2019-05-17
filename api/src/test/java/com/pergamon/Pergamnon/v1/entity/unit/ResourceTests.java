@@ -18,21 +18,21 @@ public class ResourceTests {
 
     @Before
     public void setUp() {
-        this.resource  = new Resource();
+        resource  = new Resource();
     }
 
     @Test
     public void testUrl() {
         String url = "https://example.com";
-        this.resource.setUrl(url);
+        resource.setUrl(url);
 
-        Assert.assertEquals(url, this.resource.getUrl());
+        Assert.assertEquals(url, resource.getUrl());
     }
 
     @Test
     public void testFile() {
-        this.resource.setFile(this.file);
+        resource.setFile(file);
 
-        Assert.assertEquals(this.file, this.resource.getFile());
+        Assert.assertEquals(file, resource.getFile());
     }
 }

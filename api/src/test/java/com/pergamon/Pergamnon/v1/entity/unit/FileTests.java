@@ -15,29 +15,29 @@ public class FileTests {
 
     @Before
     public void setUp() {
-        this.file  = new File();
+        file  = new File();
     }
 
     @Test
     public void testName() {
         String name = "Lorem";
-        this.file.setName(name);
+        file.setName(name);
 
-        Assert.assertEquals(name, this.file.getName());
+        Assert.assertEquals(name, file.getName());
     }
 
     @Test
     public void testStorageName() {
         String storageName = UUID.randomUUID().toString();
-        this.file.setStorageName(storageName);
+        file.setStorageName(storageName);
 
-        Assert.assertEquals(storageName, this.file.getStorageName());
+        Assert.assertEquals(storageName, file.getStorageName());
     }
 
     @Test
     public void testType() {
         String type = "image/jpeg";
-        this.file.setType(type);
+        file.setType(type);
 
         Assert.assertEquals(type, file.getType());
     }

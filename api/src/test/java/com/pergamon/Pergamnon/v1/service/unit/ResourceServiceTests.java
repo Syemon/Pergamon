@@ -52,29 +52,29 @@ public class ResourceServiceTests {
 
     @Before
     public void setUp() {
-        this.fileProperties = new FilePropertiesPojo();
+        fileProperties = new FilePropertiesPojo();
 
-        when(this.file.getName()).thenReturn("file.txt");
-        when(this.file.getStorageName()).thenReturn(UUID.randomUUID().toString());
-        when(this.file.getType()).thenReturn("plain/text");
+        when(file.getName()).thenReturn("file.txt");
+        when(file.getStorageName()).thenReturn(UUID.randomUUID().toString());
+        when(file.getType()).thenReturn("plain/text");
     }
 
     @Test
     public void testCreate_WhenCorrectData() throws Exception {
-        when(fileStorageService.storeFile(any(URL.class))).thenReturn(this.fileProperties);
-        when(fileDao.save(this.fileProperties)).thenReturn(this.file);
+        when(fileStorageService.storeFile(any(URL.class))).thenReturn(fileProperties);
+        when(fileDao.save(fileProperties)).thenReturn(file);
 
-        this.resourceService.create(this.url);
+        resourceService.create(url);
 
-        verify(this.resourceDao, times(1)).save(this.file, this.url);
+        verify(resourceDao, times(1)).save(file, url);
     }
 
     @Test
     public void testList_WhenNoResources() throws Exception {
-        List<Resource> resources = this.getFilledResourceList();
+        List<Resource> resources = getFilledResourceList();
         when(resourceDao.list()).thenReturn(resources);
 
-        Assert.assertSame(resources, this.resourceService.list());
+        Assert.assertSame(resources, resourceService.list());
     }
 
     @Test
@@ -82,32 +82,32 @@ public class ResourceServiceTests {
         List<Resource> resources = new ArrayList<>();
         when(resourceDao.list("www")).thenReturn(resources);
 
-        Assert.assertSame(resources, this.resourceService.list("www"));
+        Assert.assertSame(resources, resourceService.list("www"));
     }
 
     @Test
     public void testList_WhenWithResourceWithSearch() throws Exception {
-        List<Resource> resources = this.getFilledResourceList();
+        List<Resource> resources = getFilledResourceList();
         when(resourceDao.list("www")).thenReturn(resources);
 
-        Assert.assertSame(resources, this.resourceService.list("www"));
+        Assert.assertSame(resources, resourceService.list("www"));
     }
 
     @Test
     public void testDownload() {
-        when(this.fileDao.findByUrl(any(URL.class))).thenReturn(this.file);
-        when(this.fileStorageService.loadFileAsResource(any(String.class))).thenReturn(this.fileResource);
+        when(fileDao.findByUrl(any(URL.class))).thenReturn(file);
+        when(fileStorageService.loadFileAsResource(any(String.class))).thenReturn(fileResource);
 
-        this.resourceService.download(this.url);
+        resourceService.download(url);
     }
 
     @Test
     public void testUpdate_WhenCorrectData() throws Exception {
-        when(this.fileDao.findByUrl(this.url)).thenReturn(this.file);
+        when(fileDao.findByUrl(url)).thenReturn(file);
 
-        this.resourceService.update(this.url);
+        resourceService.update(url);
 
-        verify(this.fileStorageService, atLeastOnce()).updateFile(this.url, this.file);
+        verify(fileStorageService, atLeastOnce()).updateFile(url, file);
     }
 
     private List<Resource> getFilledResourceList() {

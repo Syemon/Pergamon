@@ -32,20 +32,20 @@ public class FileDaoTests {
 
     @Before
     public void setUp() {
-        this.fileProperties = new FilePropertiesPojo();
+        fileProperties = new FilePropertiesPojo();
     }
 
     @Test
     @Transactional
     public void testCreate_WhenCorrectData_ReturnFile() {
-        this.fileProperties
+        fileProperties
                 .setName("test.txt")
                 .setStorageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
                 .setType("plain/text");
 
         Session session = entityManager.unwrap(Session.class);
 
-        File file = fileDao.save(this.fileProperties);
+        File file = fileDao.save(fileProperties);
         session.flush();
         session.refresh(file);
 
@@ -59,7 +59,7 @@ public class FileDaoTests {
     @Test
     @Transactional
     public void testFindByUrl_WhenExists_ReturnFile() throws IOException {
-        Resource resource = this.getResource();
+        Resource resource = getResource();
         URL url = new URL("https://example.com");
 
         Session session = entityManager.unwrap(Session.class);
@@ -74,14 +74,14 @@ public class FileDaoTests {
     @Test
     @Transactional
     public void testUpdate() {
-        File file = this.getFile();
+        File file = getFile();
 
         file.setName("new_name");
         file.setStorageName("lorem ipsum");
         file.setType("plain/html");
         Session session = entityManager.unwrap(Session.class);
 
-        this.fileDao.update(file);
+        fileDao.update(file);
         session.flush();
         session.refresh(file);
 
@@ -114,7 +114,7 @@ public class FileDaoTests {
         Session session = entityManager.unwrap(Session.class);
 
         resource.setUrl("https://example.com");
-        resource.setFile(this.getFile());
+        resource.setFile(getFile());
 
         session.save(resource);
         session.flush();

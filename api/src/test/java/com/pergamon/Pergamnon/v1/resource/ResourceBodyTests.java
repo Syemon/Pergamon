@@ -14,36 +14,36 @@ public class ResourceBodyTests {
 
     @Before
     public void setUp() {
-        this.resourceBody = new ResourceBody();
+        resourceBody = new ResourceBody();
     }
 
     @Test
     public void testUrl() {
         String url = "https://example.com";
-        this.resourceBody.setUrl(url);
+        resourceBody.setUrl(url);
 
-        Assert.assertEquals(url, this.resourceBody.getUrl());
+        Assert.assertEquals(url, resourceBody.getUrl());
     }
 
     @Test
     public void testFileName() {
-        this.resourceBody.setFileName("file.txt");
+        resourceBody.setFileName("file.txt");
 
-        Assert.assertEquals("file.txt", this.resourceBody.getFileName());
+        Assert.assertEquals("file.txt", resourceBody.getFileName());
     }
 
     @Test
     public void testFileType() {
-        this.resourceBody.setFileType("plain/text");
+        resourceBody.setFileType("plain/text");
 
-        Assert.assertEquals("plain/text", this.resourceBody.getFileType());
+        Assert.assertEquals("plain/text", resourceBody.getFileType());
     }
 
     @Test
     public void testCreatedAt() {
         Date date = new Date();
-        this.resourceBody.setCreatedAt(date);
+        resourceBody.setCreatedAt(date);
 
-        Assert.assertEquals(date, this.resourceBody.getCreatedAt());
+        Assert.assertEquals(date, resourceBody.getCreatedAt());
     }
 }
