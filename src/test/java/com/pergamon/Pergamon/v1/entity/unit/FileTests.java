@@ -1,19 +1,18 @@
 package com.pergamon.Pergamon.v1.entity.unit;
 
 import com.pergamon.Pergamon.v1.entity.File;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class FileTests {
     private File file;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         file  = new File();
     }
@@ -23,7 +22,7 @@ public class FileTests {
         String name = "Lorem";
         file.setName(name);
 
-        Assert.assertEquals(name, file.getName());
+        assertEquals(name, file.getName());
     }
 
     @Test
@@ -31,7 +30,7 @@ public class FileTests {
         String storageName = UUID.randomUUID().toString();
         file.setStorageName(storageName);
 
-        Assert.assertEquals(storageName, file.getStorageName());
+        assertEquals(storageName, file.getStorageName());
     }
 
     @Test
@@ -39,6 +38,6 @@ public class FileTests {
         String type = "image/jpeg";
         file.setType(type);
 
-        Assert.assertEquals(type, file.getType());
+        assertEquals(type, file.getType());
     }
 }

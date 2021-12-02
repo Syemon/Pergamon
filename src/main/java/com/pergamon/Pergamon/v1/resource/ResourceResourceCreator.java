@@ -2,14 +2,14 @@ package com.pergamon.Pergamon.v1.resource;
 
 import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.Resource;
-import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.CollectionModel;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResourceResourceCreator {
-    public static Resources<ResourceResource> getResources(List<Resource> resources) throws MalformedURLException {
+    public static CollectionModel<ResourceResource> getResources(List<Resource> resources) throws MalformedURLException {
         List<ResourceResource> folderResources = new ArrayList<>();
 
         for (Resource resource : resources) {
@@ -24,6 +24,6 @@ public class ResourceResourceCreator {
             folderResources.add(new ResourceResource(resource, body));
         }
 
-        return new Resources<>(folderResources);
+        return new CollectionModel<>(folderResources);
     }
 }

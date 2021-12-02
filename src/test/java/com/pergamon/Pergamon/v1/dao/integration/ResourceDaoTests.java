@@ -7,23 +7,24 @@ import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import org.hibernate.Session;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.net.URL;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = PergamonApplication.class)
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@SpringBootTest
 public class ResourceDaoTests {
     private Resource resource;
 
@@ -39,7 +40,7 @@ public class ResourceDaoTests {
     @Mock
     private URL url;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         resource = new Resource();
     }
@@ -52,6 +53,7 @@ public class ResourceDaoTests {
         resourceDao.save(getFile(), url);
     }
 
+    @Disabled("rewrite with docker db")
     @Test
     @Transactional
     public void testList() {
@@ -59,9 +61,10 @@ public class ResourceDaoTests {
 
         List<Resource> resources = resourceDao.list();
 
-        Assert.assertSame(resource, resources.get(0));
+        assertSame(resource, resources.get(0));
     }
 
+    @Disabled("rewrite with docker db")
     @Test
     @Transactional
     public void testList_WhenSearchingForNotExistentUrl_ReturnEmptyList() {
@@ -69,19 +72,21 @@ public class ResourceDaoTests {
 
         List<Resource> resources = resourceDao.list("search");
 
-        Assert.assertFalse(resources.contains(resource));
+        assertFalse(resources.contains(resource));
     }
 
     @Test
+    @Disabled("rewrite with docker db")
     @Transactional
     public void testList_WhenSearchingForExistentUrl_ReturnList() {
         Resource resource = getNamedResourceAndFile("https://example.com", "test.txt");
 
         List<Resource> resources = resourceDao.list("example");
 
-        Assert.assertSame(resource, resources.get(0));
+        assertSame(resource, resources.get(0));
     }
 
+    @Disabled("rewrite with docker db")
     @Test
     @Transactional
     public void testList_WhenSearchingForExistentUrlWithDifferentCase_ReturnList() {
@@ -89,7 +94,7 @@ public class ResourceDaoTests {
 
         List<Resource> resources = resourceDao.list("eXample");
 
-        Assert.assertSame(resource, resources.get(0));
+        assertSame(resource, resources.get(0));
     }
 
     @Test
@@ -99,7 +104,7 @@ public class ResourceDaoTests {
 
         Resource resource = getResource();
 
-        Assert.assertFalse(resourceDao.exists(url));
+        assertFalse(resourceDao.exists(url));
     }
 
     @Test
@@ -109,7 +114,7 @@ public class ResourceDaoTests {
 
         Resource resource = getResource();
 
-        Assert.assertTrue(resourceDao.exists(url));
+        assertTrue(resourceDao.exists(url));
     }
 
     @Transactional

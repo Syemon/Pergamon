@@ -6,20 +6,23 @@ import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import org.hibernate.Session;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.net.URL;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+@Disabled
 @SpringBootTest(classes = PergamonApplication.class)
 public class FileDaoTests {
     private FilePropertiesPojo fileProperties;
@@ -30,7 +33,7 @@ public class FileDaoTests {
     @Autowired
     private FileDao fileDao;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         fileProperties = new FilePropertiesPojo();
     }
@@ -49,11 +52,11 @@ public class FileDaoTests {
         session.getTransaction().commit();
         session.refresh(file);
 
-        Assert.assertSame("test.txt", file.getName());
-        Assert.assertSame("8d4073ce-17d5-43e1-90a0-62e94fba1402", file.getStorageName());
-        Assert.assertSame("plain/text", file.getType());
-        Assert.assertNotNull(file.getCreatedAt());
-        Assert.assertNotNull(file.getId());
+        assertSame("test.txt", file.getName());
+        assertSame("8d4073ce-17d5-43e1-90a0-62e94fba1402", file.getStorageName());
+        assertSame("plain/text", file.getType());
+        assertNotNull(file.getCreatedAt());
+        assertNotNull(file.getId());
     }
 
     @Test
@@ -69,7 +72,7 @@ public class FileDaoTests {
         session.getTransaction().commit();
         session.refresh(file);
 
-        Assert.assertEquals(resource.getFile(), file);
+        assertEquals(resource.getFile(), file);
     }
 
     @Test
@@ -86,9 +89,9 @@ public class FileDaoTests {
         session.getTransaction().commit();
         session.refresh(file);
 
-        Assert.assertEquals(file.getName(), "new_name");
-        Assert.assertEquals(file.getStorageName(), "lorem ipsum");
-        Assert.assertEquals(file.getType(), "plain/html");
+        assertEquals(file.getName(), "new_name");
+        assertEquals(file.getStorageName(), "lorem ipsum");
+        assertEquals(file.getType(), "plain/html");
     }
 
     @Transactional
