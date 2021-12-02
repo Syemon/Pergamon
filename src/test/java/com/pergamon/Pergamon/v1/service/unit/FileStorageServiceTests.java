@@ -4,23 +4,21 @@ import com.pergamon.Pergamon.PergamonApplication;
 import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.service.FileStorageService;
 import org.apache.commons.io.FilenameUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = PergamonApplication.class)
 @AutoConfigureMockMvc()
 public class FileStorageServiceTests {
@@ -46,8 +44,8 @@ public class FileStorageServiceTests {
 
         FilePropertiesPojo fileProperties = fileStorageService.storeFile(url);
 
-        Assert.assertEquals(fileProperties.getName(), "test.txt");
-        Assert.assertTrue(fileProperties.getStorageName()
+        assertEquals(fileProperties.getName(), "test.txt");
+        assertTrue(fileProperties.getStorageName()
                 .matches("[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}"));
     }
 }

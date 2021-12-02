@@ -7,24 +7,25 @@ import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import com.pergamon.Pergamon.v1.service.FileStorageService;
 import com.pergamon.Pergamon.v1.service.ResourceService;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = ResourceService.class)
 public class ResourceServiceTests {
     private FilePropertiesPojo fileProperties;
@@ -50,7 +51,7 @@ public class ResourceServiceTests {
     @MockBean
     private ResourceDao resourceDao;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         fileProperties = new FilePropertiesPojo();
 
@@ -74,7 +75,7 @@ public class ResourceServiceTests {
         List<Resource> resources = getFilledResourceList();
         when(resourceDao.list()).thenReturn(resources);
 
-        Assert.assertSame(resources, resourceService.list());
+        assertSame(resources, resourceService.list());
     }
 
     @Test
@@ -82,7 +83,7 @@ public class ResourceServiceTests {
         List<Resource> resources = new ArrayList<>();
         when(resourceDao.list("www")).thenReturn(resources);
 
-        Assert.assertSame(resources, resourceService.list("www"));
+        assertSame(resources, resourceService.list("www"));
     }
 
     @Test
@@ -90,7 +91,7 @@ public class ResourceServiceTests {
         List<Resource> resources = getFilledResourceList();
         when(resourceDao.list("www")).thenReturn(resources);
 
-        Assert.assertSame(resources, resourceService.list("www"));
+        assertSame(resources, resourceService.list("www"));
     }
 
     @Test

@@ -54,4 +54,14 @@ public class Resource {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "id=" + id +
+                ", file=" + file +
+                ", url='" + url + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

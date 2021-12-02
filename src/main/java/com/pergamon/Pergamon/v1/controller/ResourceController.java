@@ -8,7 +8,7 @@ import com.pergamon.Pergamon.v1.resource.ResourceResource;
 import com.pergamon.Pergamon.v1.resource.ResourceResourceCreator;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +43,7 @@ public class ResourceController {
     }
 
     @GetMapping(value = "/resources", params = {"search"}, produces = { "application/hal+json" })
-    public ResponseEntity<Resources<ResourceResource>> list(@RequestParam(name = "search") String search) throws MalformedURLException {
+    public ResponseEntity<CollectionModel<ResourceResource>> list(@RequestParam(name = "search") String search) throws MalformedURLException {
         List<Resource> folders = resourceService.list(search);
 
         return ResponseEntity.ok(
@@ -52,7 +52,7 @@ public class ResourceController {
     }
 
     @GetMapping(value = "/resources", produces = { "application/hal+json" })
-    public ResponseEntity<Resources<ResourceResource>> list() throws MalformedURLException {
+    public ResponseEntity<CollectionModel<ResourceResource>> list() throws MalformedURLException {
         List<Resource> folders = resourceService.list();
 
         return ResponseEntity.ok(

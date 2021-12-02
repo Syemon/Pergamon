@@ -2,21 +2,19 @@ package com.pergamon.Pergamon.v1.entity.unit;
 
 import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.Resource;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class ResourceTests {
     private Resource resource;
 
     @Mock
     private File file;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         resource  = new Resource();
     }
@@ -26,13 +24,13 @@ public class ResourceTests {
         String url = "https://example.com";
         resource.setUrl(url);
 
-        Assert.assertEquals(url, resource.getUrl());
+        assertEquals(url, resource.getUrl());
     }
 
     @Test
     public void testFile() {
         resource.setFile(file);
 
-        Assert.assertEquals(file, resource.getFile());
+        assertEquals(file, resource.getFile());
     }
 }
