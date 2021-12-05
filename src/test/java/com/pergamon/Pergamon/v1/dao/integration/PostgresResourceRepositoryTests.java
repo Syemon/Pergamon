@@ -1,0 +1,115 @@
+package com.pergamon.Pergamon.v1.dao.integration;
+
+import com.pergamon.Pergamon.v1.dao.PostgresFileRepository;
+import com.pergamon.Pergamon.v1.dao.PostgresResourceRepository;
+import com.pergamon.Pergamon.v1.entity.File;
+import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
+import com.pergamon.Pergamon.v1.entity.Resource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+public class PostgresResourceRepositoryTests {
+
+    @Autowired
+    private PostgresFileRepository postgresFileRepository;
+
+    @Autowired
+    private PostgresResourceRepository sut;
+
+    private URL url;
+
+    @BeforeEach
+    public void setUp() throws MalformedURLException {
+        url = new URL("https://example.com");
+    }
+
+    @Test
+    @Transactional
+    public void testCreate_WhenCorrectData() {
+        sut.save(getFile(), url);
+    }
+
+    @Test
+    @Transactional
+    public void testList() throws MalformedURLException {
+        Resource resource = getResource();
+
+        List<Resource> resources = sut.list();
+
+        assertThat(resources.get(0).getId()).isEqualTo(resource.getId());
+        assertThat(resources.get(0).getFileId()).isEqualTo(resource.getFileId());
+        assertThat(resources.get(0).getUrl()).isEqualTo(resource.getUrl());
+    }
+
+    @Test
+    @Transactional
+    public void testList_WhenSearchingForNotExistentUrl_ReturnEmptyList() throws MalformedURLException {
+        Resource resource = getResource();
+
+        List<Resource> resources = sut.list("search");
+
+        assertThat(resources).doesNotContain(resource);
+    }
+
+    @Test
+    @Transactional
+    public void testList_WhenSearchingForExistentUrl_ReturnList() throws MalformedURLException {
+        Resource resource = getResource();
+
+        List<Resource> resources = sut.list("example");
+
+        assertThat(resources).contains(resource);
+    }
+
+    @Test
+    @Transactional
+    public void testList_WhenSearchingForExistentUrlWithDifferentCase_ReturnList() throws MalformedURLException {
+        Resource resource = getResource();
+
+        List<Resource> resources = sut.list("eXample");
+
+        assertThat(resources).contains(resource);
+    }
+//
+    @Test
+    @Transactional
+    public void testExists_WhenNotExists_ReturnFalse() throws MalformedURLException {
+        getResource();
+
+        assertThat(sut.exists(new URL("https://example2.com"))).isFalse();
+    }
+
+    @Test
+    @Transactional
+    public void testExists_WhenExists_ReturnTrue() throws MalformedURLException {
+        getResource();
+
+        assertThat(sut.exists(url)).isTrue();
+    }
+
+    @Transactional
+    public File getFile() {
+        FilePropertiesPojo fileProperties = new FilePropertiesPojo();
+        fileProperties
+                .setName("test.txt")
+                .setStorageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
+                .setType("plain/text");
+
+        return postgresFileRepository.save(fileProperties);
+    }
+
+    @Transactional
+    public Resource getResource() throws MalformedURLException {
+        return sut.save(getFile(), url);
+    }
+}

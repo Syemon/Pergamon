@@ -3,6 +3,7 @@ package com.pergamon.Pergamon.v1.resource;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class ResourceBody {
@@ -12,7 +13,7 @@ public class ResourceBody {
 
     @JsonProperty("created_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     public String getUrl() {
         return url;
@@ -44,11 +45,11 @@ public class ResourceBody {
         return this;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public ResourceBody setCreatedAt(Date createdAt) {
+    public ResourceBody setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
 
         return this;
