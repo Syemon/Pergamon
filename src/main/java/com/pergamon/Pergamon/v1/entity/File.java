@@ -1,42 +1,32 @@
 package com.pergamon.Pergamon.v1.entity;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
-
-@Entity
-@Table(name="file")
 public class File {
-    @Id
-    @GeneratedValue()
-    private Integer id;
+    private FileId id;
 
-    @NotNull
-    @Column(name="name")
     private String name;
 
-    @NotNull
-    @Column(name="storage_name")
     private String storageName;
 
-    @NotNull
-    @Column(name="type")
     private String type;
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
-    public Integer getId() {
+    public File(FileId id, String name, String storageName, String type, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.storageName = storageName;
+        this.type = type;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public FileId getId() {
         return id;
     }
 
@@ -70,19 +60,19 @@ public class File {
         return this;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

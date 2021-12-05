@@ -47,7 +47,7 @@ public class ResourceController {
         List<Resource> folders = resourceService.list(search);
 
         return ResponseEntity.ok(
-                ResourceResourceCreator.getResources(folders)
+                resourceService.getResources(folders)
         );
     }
 
@@ -56,7 +56,7 @@ public class ResourceController {
         List<Resource> folders = resourceService.list();
 
         return ResponseEntity.ok(
-                ResourceResourceCreator.getResources(folders)
+                resourceService.getResources(folders)
         );
     }
 

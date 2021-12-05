@@ -1,12 +1,15 @@
 package com.pergamon.Pergamon.v1.service;
 
-import com.pergamon.Pergamon.v1.dao.FileDao;
-import com.pergamon.Pergamon.v1.dao.ResourceDao;
+import com.pergamon.Pergamon.v1.dao.PostgresFileRepository;
+import com.pergamon.Pergamon.v1.dao.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import com.pergamon.Pergamon.v1.exception.ResourceCreationException;
+import com.pergamon.Pergamon.v1.resource.ResourceResource;
+import com.pergamon.Pergamon.v1.resource.ResourceResourceCreator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +18,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
 @Service
 public class ResourceService {
     private FileStorageService fileStorageService;
-    private FileDao fileDao;
-    private ResourceDao resourceDao;
+    private PostgresFileRepository fileDao;
+    private PostgresResourceRepository resourceDao;
+    private ResourceResourceCreator resourceResourceCreator;
 
     @Autowired
     public ResourceService(
             FileStorageService fileStorageService,
-            FileDao fileDao,
-            ResourceDao resourceDao
+            PostgresFileRepository fileDao,
+            PostgresResourceRepository resourceDao,
+            ResourceResourceCreator resourceResourceCreator
     ) {
         this.fileStorageService = fileStorageService;
         this.fileDao = fileDao;
@@ -91,5 +97,9 @@ public class ResourceService {
     @Transactional
     public List<Resource> list(String search) {
         return resourceDao.list(search);
+    }
+
+    public CollectionModel<ResourceResource> getResources(List<Resource> resources) throws MalformedURLException {
+        return resourceResourceCreator.getResources(resources);
     }
 }
