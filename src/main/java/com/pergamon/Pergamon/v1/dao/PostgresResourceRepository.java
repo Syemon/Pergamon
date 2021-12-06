@@ -2,12 +2,10 @@ package com.pergamon.Pergamon.v1.dao;
 
 import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.FileId;
-import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import com.pergamon.Pergamon.v1.entity.ResourceId;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Repository;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -15,20 +13,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
-@Repository
 public class PostgresResourceRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public PostgresResourceRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-//    public void save(File file, URL url) {
-//        jdbcTemplate.update("INSERT INTO resource(url, file_id) VALUES(?, ?)", file.getId().id(), url);
-//    }
 
     public Resource save(File file, URL url) {
         LocalDateTime createdAt = LocalDateTime.now();
@@ -53,7 +45,6 @@ public class PostgresResourceRepository {
                 createdAt
         );
     }
-
 
     public Boolean exists(URL url) {
         System.out.println(url.toString());

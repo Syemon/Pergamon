@@ -7,10 +7,10 @@ import com.pergamon.Pergamon.v1.entity.FileId;
 import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import com.pergamon.Pergamon.v1.entity.ResourceId;
+import com.pergamon.Pergamon.v1.resource.ResourceResourceCreator;
 import com.pergamon.Pergamon.v1.service.FileStorageService;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +30,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Disabled
 @SpringBootTest(classes = ResourceService.class)
 public class ResourceServiceTests {
     private FilePropertiesPojo fileProperties;
 
     @Autowired
-    private ResourceService resourceService;
+    private ResourceService sut;
 
     @Mock
     private URL url;
@@ -56,6 +55,9 @@ public class ResourceServiceTests {
     @MockBean
     private PostgresResourceRepository resourceDao;
 
+    @MockBean
+    private ResourceResourceCreator resourceResourceCreator;
+
     @BeforeEach
     public void setUp() {
         fileProperties = new FilePropertiesPojo();
@@ -70,7 +72,7 @@ public class ResourceServiceTests {
         when(fileStorageService.storeFile(any(URL.class))).thenReturn(fileProperties);
         when(fileDao.save(fileProperties)).thenReturn(file);
 
-        resourceService.create(url);
+        sut.create(url);
 
         verify(resourceDao, times(1)).save(file, url);
     }
@@ -80,7 +82,7 @@ public class ResourceServiceTests {
         List<Resource> resources = getFilledResourceList();
         when(resourceDao.list()).thenReturn(resources);
 
-        assertSame(resources, resourceService.list());
+        assertSame(resources, sut.list());
     }
 
     @Test
@@ -88,7 +90,7 @@ public class ResourceServiceTests {
         List<Resource> resources = new ArrayList<>();
         when(resourceDao.list("www")).thenReturn(resources);
 
-        assertSame(resources, resourceService.list("www"));
+        assertSame(resources, sut.list("www"));
     }
 
     @Test
@@ -96,7 +98,7 @@ public class ResourceServiceTests {
         List<Resource> resources = getFilledResourceList();
         when(resourceDao.list("www")).thenReturn(resources);
 
-        assertSame(resources, resourceService.list("www"));
+        assertSame(resources, sut.list("www"));
     }
 
     @Test
@@ -104,14 +106,14 @@ public class ResourceServiceTests {
         when(fileDao.findByUrl(any(URL.class))).thenReturn(file);
         when(fileStorageService.loadFileAsResource(any(String.class))).thenReturn(fileResource);
 
-        resourceService.download(url);
+        sut.download(url);
     }
 
     @Test
     public void testUpdate_WhenCorrectData() throws Exception {
         when(fileDao.findByUrl(url)).thenReturn(file);
 
-        resourceService.update(url);
+        sut.update(url);
 
         verify(fileStorageService, atLeastOnce()).updateFile(url, file);
     }
