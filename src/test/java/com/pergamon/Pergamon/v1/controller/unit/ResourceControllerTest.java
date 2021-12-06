@@ -20,8 +20,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//@RunWith(SpringRunner.class)
-//@Disabled
 @WebMvcTest(ResourceController.class)
 public class ResourceControllerTest {
     private Map<String, String> body = new HashMap<>();
