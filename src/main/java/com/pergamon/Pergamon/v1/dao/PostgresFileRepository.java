@@ -3,12 +3,10 @@ package com.pergamon.Pergamon.v1.dao;
 import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.FileId;
 import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
-import com.pergamon.Pergamon.v1.property.FileStorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Repository;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -18,15 +16,11 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Repository
 public class PostgresFileRepository {
     private JdbcTemplate jdbcTemplate;
-    private FileStorageProperties fileStorageProperties;
 
-    @Autowired
-    public PostgresFileRepository(JdbcTemplate jdbcTemplate, FileStorageProperties fileStorageProperties) {
+    public PostgresFileRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.fileStorageProperties = fileStorageProperties;
     }
 
     public File save(FilePropertiesPojo filePropertiesPojo) {

@@ -11,12 +11,10 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class ResourceResourceCreator {
 
     private final PostgresFileRepository postgresFileRepository;
 
-    @Autowired
     public ResourceResourceCreator(PostgresFileRepository postgresFileRepository) {
         this.postgresFileRepository = postgresFileRepository;
     }

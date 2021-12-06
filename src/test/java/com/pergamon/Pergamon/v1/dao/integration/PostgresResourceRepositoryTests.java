@@ -41,7 +41,7 @@ public class PostgresResourceRepositoryTests {
 
     @Test
     @Transactional
-    public void testList() throws MalformedURLException {
+    public void testList() {
         Resource resource = getResource();
 
         List<Resource> resources = sut.list();
@@ -53,7 +53,7 @@ public class PostgresResourceRepositoryTests {
 
     @Test
     @Transactional
-    public void testList_WhenSearchingForNotExistentUrl_ReturnEmptyList() throws MalformedURLException {
+    public void testList_WhenSearchingForNotExistentUrl_ReturnEmptyList() {
         Resource resource = getResource();
 
         List<Resource> resources = sut.list("search");
@@ -63,7 +63,7 @@ public class PostgresResourceRepositoryTests {
 
     @Test
     @Transactional
-    public void testList_WhenSearchingForExistentUrl_ReturnList() throws MalformedURLException {
+    public void testList_WhenSearchingForExistentUrl_ReturnList() {
         Resource resource = getResource();
 
         List<Resource> resources = sut.list("example");
@@ -73,14 +73,14 @@ public class PostgresResourceRepositoryTests {
 
     @Test
     @Transactional
-    public void testList_WhenSearchingForExistentUrlWithDifferentCase_ReturnList() throws MalformedURLException {
+    public void testList_WhenSearchingForExistentUrlWithDifferentCase_ReturnList() {
         Resource resource = getResource();
 
         List<Resource> resources = sut.list("eXample");
 
         assertThat(resources).contains(resource);
     }
-//
+
     @Test
     @Transactional
     public void testExists_WhenNotExists_ReturnFalse() throws MalformedURLException {
@@ -91,7 +91,7 @@ public class PostgresResourceRepositoryTests {
 
     @Test
     @Transactional
-    public void testExists_WhenExists_ReturnTrue() throws MalformedURLException {
+    public void testExists_WhenExists_ReturnTrue() {
         getResource();
 
         assertThat(sut.exists(url)).isTrue();
@@ -109,7 +109,7 @@ public class PostgresResourceRepositoryTests {
     }
 
     @Transactional
-    public Resource getResource() throws MalformedURLException {
+    public Resource getResource() {
         return sut.save(getFile(), url);
     }
 }

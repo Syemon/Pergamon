@@ -4,12 +4,9 @@ import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.exception.FileNotFoundException;
 import com.pergamon.Pergamon.v1.exception.FileStorageException;
-import com.pergamon.Pergamon.v1.property.FileStorageProperties;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -21,13 +18,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
-@Service
 public class FileStorageService {
     private final Path fileStorageLocation;
 
-    @Autowired
-    public FileStorageService(FileStorageProperties fileStorageProperties) {
-        fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
+    public FileStorageService(String uploadDirPath) {
+        fileStorageLocation = Paths.get(uploadDirPath)
                 .toAbsolutePath().normalize();
         try {
             Files.createDirectories(fileStorageLocation);

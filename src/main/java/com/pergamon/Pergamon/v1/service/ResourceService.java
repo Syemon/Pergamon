@@ -8,13 +8,11 @@ import com.pergamon.Pergamon.v1.entity.Resource;
 import com.pergamon.Pergamon.v1.exception.ResourceCreationException;
 import com.pergamon.Pergamon.v1.resource.ResourceResource;
 import com.pergamon.Pergamon.v1.resource.ResourceResourceCreator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -22,14 +20,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-@Service
 public class ResourceService {
     private FileStorageService fileStorageService;
     private PostgresFileRepository fileDao;
     private PostgresResourceRepository resourceDao;
     private ResourceResourceCreator resourceResourceCreator;
 
-    @Autowired
     public ResourceService(
             FileStorageService fileStorageService,
             PostgresFileRepository fileDao,
@@ -39,6 +35,7 @@ public class ResourceService {
         this.fileStorageService = fileStorageService;
         this.fileDao = fileDao;
         this.resourceDao = resourceDao;
+        this.resourceResourceCreator = resourceResourceCreator;
     }
 
     @Async("threadPoolTaskExecutor")
