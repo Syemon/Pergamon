@@ -7,7 +7,7 @@ import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import com.pergamon.Pergamon.v1.exception.ResourceCreationException;
 import com.pergamon.Pergamon.v1.resource.ResourceResource;
-import com.pergamon.Pergamon.v1.resource.ResourceResourceCreator;
+import com.pergamon.Pergamon.v1.resource.ResourceCollectionModelCreator;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,18 +24,18 @@ public class ResourceService {
     private FileStorageService fileStorageService;
     private PostgresFileRepository fileDao;
     private PostgresResourceRepository resourceDao;
-    private ResourceResourceCreator resourceResourceCreator;
+    private ResourceCollectionModelCreator resourceCollectionModelCreator;
 
     public ResourceService(
             FileStorageService fileStorageService,
             PostgresFileRepository fileDao,
             PostgresResourceRepository resourceDao,
-            ResourceResourceCreator resourceResourceCreator
+            ResourceCollectionModelCreator resourceCollectionModelCreator
     ) {
         this.fileStorageService = fileStorageService;
         this.fileDao = fileDao;
         this.resourceDao = resourceDao;
-        this.resourceResourceCreator = resourceResourceCreator;
+        this.resourceCollectionModelCreator = resourceCollectionModelCreator;
     }
 
     @Async("threadPoolTaskExecutor")
@@ -97,6 +97,6 @@ public class ResourceService {
     }
 
     public CollectionModel<ResourceResource> getResources(List<Resource> resources) throws MalformedURLException {
-        return resourceResourceCreator.getResources(resources);
+        return resourceCollectionModelCreator.getResourcesCollectionModel(resources);
     }
 }

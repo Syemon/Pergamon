@@ -7,7 +7,7 @@ import com.pergamon.Pergamon.v1.entity.FileId;
 import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import com.pergamon.Pergamon.v1.entity.ResourceId;
-import com.pergamon.Pergamon.v1.resource.ResourceResourceCreator;
+import com.pergamon.Pergamon.v1.resource.ResourceCollectionModelCreator;
 import com.pergamon.Pergamon.v1.service.FileStorageService;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +56,7 @@ public class ResourceServiceTests {
     private PostgresResourceRepository resourceDao;
 
     @MockBean
-    private ResourceResourceCreator resourceResourceCreator;
+    private ResourceCollectionModelCreator resourceResourceCreator;
 
     @BeforeEach
     public void setUp() {

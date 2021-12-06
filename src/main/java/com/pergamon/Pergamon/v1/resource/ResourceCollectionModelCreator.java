@@ -3,23 +3,21 @@ package com.pergamon.Pergamon.v1.resource;
 import com.pergamon.Pergamon.v1.dao.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResourceResourceCreator {
+public class ResourceCollectionModelCreator {
 
     private final PostgresFileRepository postgresFileRepository;
 
-    public ResourceResourceCreator(PostgresFileRepository postgresFileRepository) {
+    public ResourceCollectionModelCreator(PostgresFileRepository postgresFileRepository) {
         this.postgresFileRepository = postgresFileRepository;
     }
 
-    public CollectionModel<ResourceResource> getResources(List<Resource> resources) throws MalformedURLException {
+    public CollectionModel<ResourceResource> getResourcesCollectionModel(List<Resource> resources) throws MalformedURLException {
         List<ResourceResource> folderResources = new ArrayList<>();
 
         for (Resource resource : resources) {
@@ -34,6 +32,6 @@ public class ResourceResourceCreator {
             folderResources.add(new ResourceResource(resource, body));
         }
 
-        return new CollectionModel<>(folderResources);
+        return CollectionModel.of(folderResources);
     }
 }

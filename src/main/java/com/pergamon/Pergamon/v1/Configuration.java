@@ -2,7 +2,7 @@ package com.pergamon.Pergamon.v1;
 
 import com.pergamon.Pergamon.v1.dao.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dao.PostgresResourceRepository;
-import com.pergamon.Pergamon.v1.resource.ResourceResourceCreator;
+import com.pergamon.Pergamon.v1.resource.ResourceCollectionModelCreator;
 import com.pergamon.Pergamon.v1.service.FileStorageService;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +28,8 @@ public class Configuration {
     }
 
     @Bean
-    public ResourceResourceCreator resourceResourceCreator(PostgresFileRepository postgresFileRepository) {
-        return new ResourceResourceCreator(postgresFileRepository);
+    public ResourceCollectionModelCreator resourceCollectionModelCreator(PostgresFileRepository postgresFileRepository) {
+        return new ResourceCollectionModelCreator(postgresFileRepository);
     }
 
     @Bean
@@ -37,7 +37,7 @@ public class Configuration {
             FileStorageService fileStorageService,
             PostgresFileRepository postgresFileRepository,
             PostgresResourceRepository postgresResourceRepository,
-            ResourceResourceCreator resourceResourceCreator) {
-        return new ResourceService(fileStorageService, postgresFileRepository, postgresResourceRepository, resourceResourceCreator);
+            ResourceCollectionModelCreator resourceCollectionModelCreator) {
+        return new ResourceService(fileStorageService, postgresFileRepository, postgresResourceRepository, resourceCollectionModelCreator);
     }
 }
