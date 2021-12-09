@@ -11,8 +11,8 @@ import java.net.URL;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-public class ResourceResource extends RepresentationModel {
-    private ResourceBody body;
+public class ResourceResource extends RepresentationModel<ResourceResource> {
+    private final ResourceBody body;
 
     public ResourceResource(Resource resource, ResourceBody body) throws MalformedURLException {
         add(linkTo(methodOn(ResourceController.class).download(new URL(resource.getUrl()))).withRel("download"));

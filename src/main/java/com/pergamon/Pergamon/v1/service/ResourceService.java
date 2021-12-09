@@ -6,8 +6,8 @@ import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import com.pergamon.Pergamon.v1.exception.ResourceCreationException;
-import com.pergamon.Pergamon.v1.resource.ResourceResource;
 import com.pergamon.Pergamon.v1.resource.ResourceCollectionModelCreator;
+import com.pergamon.Pergamon.v1.resource.ResourceResource;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,10 +21,10 @@ import java.net.URL;
 import java.util.List;
 
 public class ResourceService {
-    private FileStorageService fileStorageService;
-    private PostgresFileRepository fileDao;
-    private PostgresResourceRepository resourceDao;
-    private ResourceCollectionModelCreator resourceCollectionModelCreator;
+    private final FileStorageService fileStorageService;
+    private final PostgresFileRepository fileDao;
+    private final PostgresResourceRepository resourceDao;
+    private final ResourceCollectionModelCreator resourceCollectionModelCreator;
 
     public ResourceService(
             FileStorageService fileStorageService,
