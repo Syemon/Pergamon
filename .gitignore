@@ -1,6 +1,8 @@
-.gradle
-/build/
-!gradle/wrapper/gradle-wrapper.jar
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 test_uploads
 
 ### IntelliJ IDEA ###
