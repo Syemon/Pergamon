@@ -1,6 +1,7 @@
 package com.pergamon.Pergamon.v1.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pergamon.Pergamon.v1.controller.ResourceController;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.junit.jupiter.api.Test;
@@ -90,7 +91,7 @@ public class ResourceControllerTest {
         mockMvc.perform(get("/api/v1/resources"))
                 .andExpect(status().isOk())
                 .andExpect(
-                        content().contentType("application/hal+json"));
+                        content().contentType(ResourceController.APPLICATION_HAL_JSON));
     }
 
     @Test
@@ -102,7 +103,7 @@ public class ResourceControllerTest {
         mockMvc.perform(get("/api/v1/resources").param("search", "www"))
                 .andExpect(status().isOk())
                 .andExpect(
-                        content().contentTypeCompatibleWith("application/hal+json"));
+                        content().contentTypeCompatibleWith(ResourceController.APPLICATION_HAL_JSON));
     }
 
     @Test
