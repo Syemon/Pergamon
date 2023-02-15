@@ -8,6 +8,8 @@ import com.pergamon.Pergamon.v1.resource.ResourceResource;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +27,10 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE )
 public class ResourceController {
+
+    protected final static String APPLICATION_HAL_JSON = "application/hal+json";
     private final ResourceService resourceService;
 
     @Autowired
@@ -35,7 +39,7 @@ public class ResourceController {
     }
 
     @PutMapping(value = "/resources")
-    public ResponseEntity upsert(@Valid @RequestBody ResourceRequest resourceRequest) throws IOException {
+    public ResponseEntity<Void> upsert(@Valid @RequestBody ResourceRequest resourceRequest) throws IOException {
         try {
             resourceRequest.getUrl().openConnection().connect();
         } catch (IOException exc) {
@@ -47,25 +51,31 @@ public class ResourceController {
         return ResponseEntity.accepted().build();
     }
 
-    @GetMapping(value = "/resources", params = {"search"}, produces = { "application/hal+json" })
+    @GetMapping(value = "/resources", params = {"search"})
     public ResponseEntity<CollectionModel<ResourceResource>> list(@RequestParam(name = "search") String search) throws MalformedURLException {
         List<Resource> folders = resourceService.list(search);
 
-        return ResponseEntity.ok(
-                resourceService.getResources(folders)
-        );
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", APPLICATION_HAL_JSON);
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(resourceService.getResources(folders));
     }
 
     @GetMapping(value = "/resources", produces = { "application/hal+json" })
     public ResponseEntity<CollectionModel<ResourceResource>> list() throws MalformedURLException {
         List<Resource> folders = resourceService.list();
 
-        return ResponseEntity.ok(
-                resourceService.getResources(folders)
-        );
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", APPLICATION_HAL_JSON);
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(resourceService.getResources(folders));
     }
 
-    @GetMapping(value = "/resources/downloads", produces = { "application/hal+json" })
+    @GetMapping(value = "/resources/downloads")
     public ResponseEntity<org.springframework.core.io.Resource> download(@RequestParam(name = "url") URL url) {
         if (!resourceService.exists(url)) {
             throw new ResourceNotFoundException("Resource from given url doesn\'t exist");
