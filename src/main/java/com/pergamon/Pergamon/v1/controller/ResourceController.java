@@ -6,12 +6,10 @@ import com.pergamon.Pergamon.v1.exception.ResourceNotFoundException;
 import com.pergamon.Pergamon.v1.request.ResourceRequest;
 import com.pergamon.Pergamon.v1.resource.ResourceResource;
 import com.pergamon.Pergamon.v1.service.ResourceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,15 +23,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-@CrossOrigin
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE )
 public class ResourceController {
 
-    protected final static String APPLICATION_HAL_JSON = "application/hal+json";
+    public final static String APPLICATION_HAL_JSON = "application/hal+json";
     private final ResourceService resourceService;
 
-    @Autowired
     public ResourceController(ResourceService resourceService) {
         this.resourceService = resourceService;
     }
@@ -63,7 +59,7 @@ public class ResourceController {
                 .body(resourceService.getResources(folders));
     }
 
-    @GetMapping(value = "/resources", produces = { "application/hal+json" })
+    @GetMapping(value = "/resources")
     public ResponseEntity<CollectionModel<ResourceResource>> list() throws MalformedURLException {
         List<Resource> folders = resourceService.list();
 
