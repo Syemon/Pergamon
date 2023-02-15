@@ -1,26 +1,32 @@
 package com.pergamon.Pergamon.v1.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pergamon.Pergamon.v1.controller.ResourceController;
 import com.pergamon.Pergamon.v1.entity.Resource;
 import com.pergamon.Pergamon.v1.service.ResourceService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ResourceController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ResourceControllerTest {
     private Map<String, String> body = new HashMap<>();
 
@@ -76,7 +82,6 @@ public class ResourceControllerTest {
     }
 
     @Test
-    @Disabled //FIXME: after upgrade
     public void testList_WhenSuccess() throws Exception {
         List<Resource> resources = new ArrayList<>();
 
@@ -85,11 +90,10 @@ public class ResourceControllerTest {
         mockMvc.perform(get("/api/v1/resources"))
                 .andExpect(status().isOk())
                 .andExpect(
-                        content().contentTypeCompatibleWith("application/hal+json"));
+                        content().contentType("application/hal+json"));
     }
 
     @Test
-    @Disabled //FIXME: after upgrade
     public void testList_WithSearchParameter() throws Exception {
         List<Resource> resources = new ArrayList<>();
 
