@@ -1,6 +1,7 @@
 package com.pergamon.Pergamon.v1.request;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
+
 import java.net.URL;
 
 public class ResourceRequest {
