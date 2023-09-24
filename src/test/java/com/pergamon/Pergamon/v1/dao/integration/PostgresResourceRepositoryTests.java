@@ -5,6 +5,7 @@ import com.pergamon.Pergamon.v1.dao.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.entity.File;
 import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.entity.Resource;
+import org.assertj.core.data.TemporalUnitOffset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 @SpringBootTest
 public class PostgresResourceRepositoryTests {
+
+    private static final String URL = "https://example.com";
 
     @Autowired
     private PostgresFileRepository postgresFileRepository;
@@ -30,7 +36,7 @@ public class PostgresResourceRepositoryTests {
 
     @BeforeEach
     public void setUp() throws MalformedURLException {
-        url = new URL("https://example.com");
+        url = new URL(URL);
     }
 
     @Test
@@ -68,7 +74,13 @@ public class PostgresResourceRepositoryTests {
 
         List<Resource> resources = sut.list("example");
 
-        assertThat(resources).contains(resource);
+        assertThat(resources).hasSize(1);
+        Resource result = resources.get(0);
+        assertThat(result.getId().id()).isNotZero();
+        assertThat(result.getFileId().id()).isNotZero();
+        assertThat(result.getUrl()).isEqualTo(URL);
+        assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
+
     }
 
     @Test
@@ -78,7 +90,12 @@ public class PostgresResourceRepositoryTests {
 
         List<Resource> resources = sut.list("eXample");
 
-        assertThat(resources).contains(resource);
+        assertThat(resources).hasSize(1);
+        Resource result = resources.get(0);
+        assertThat(result.getId().id()).isNotZero();
+        assertThat(result.getFileId().id()).isNotZero();
+        assertThat(result.getUrl()).isEqualTo(URL);
+        assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
     }
 
     @Test
