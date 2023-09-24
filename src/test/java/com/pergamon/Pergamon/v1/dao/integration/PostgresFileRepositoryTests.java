@@ -3,9 +3,9 @@ package com.pergamon.Pergamon.v1.dao.integration;
 import com.pergamon.Pergamon.PergamonApplication;
 import com.pergamon.Pergamon.v1.dao.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dao.PostgresResourceRepository;
-import com.pergamon.Pergamon.v1.entity.File;
-import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
-import com.pergamon.Pergamon.v1.entity.Resource;
+import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.domain.FilePropertiesPojo;
+import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = PergamonApplication.class)
 public class PostgresFileRepositoryTests {
-    private FilePropertiesPojo fileProperties;
+    private FileEntity fileEntity;
 
     @Autowired
     private PostgresFileRepository fileDao;
@@ -29,19 +29,20 @@ public class PostgresFileRepositoryTests {
 
     @BeforeEach
     public void setUp() {
-        fileProperties = new FilePropertiesPojo();
+        fileEntity = FileEntity.builder().build();
     }
 
     @Test
     @Transactional
     public void testCreate_WhenCorrectData_ReturnFile() {
-        fileProperties
-                .setName("test.txt")
-                .setStorageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
-                .setType("plain/text");
+        fileEntity = FileEntity.builder()
+                .name("test.txt")
+                .storageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
+                .type("plain/text")
+                .build();
 
 
-        File file = fileDao.save(fileProperties);
+        FileEntity file = fileDao.save(fileEntity);
 
         assertThat(file.getName()).isEqualTo("test.txt");
         assertThat(file.getStorageName()).isEqualTo("8d4073ce-17d5-43e1-90a0-62e94fba1402");
@@ -54,10 +55,10 @@ public class PostgresFileRepositoryTests {
     @Test
     @Transactional
     public void testFindByUrl_WhenExists_ReturnFile() throws MalformedURLException {
-        Resource resource = getResource();
+        ResourceEntity resource = getResource();
         URL url = new URL("https://example.com");
 
-        File file = fileDao.findByUrl(url);
+        FileEntity file = fileDao.findByUrl(url);
 
         assertThat(file.getId()).isEqualTo(resource.getFileId());
     }
@@ -65,7 +66,7 @@ public class PostgresFileRepositoryTests {
     @Test
     @Transactional
     public void testUpdate() { //FIXME: It can end up as a false positive
-        File file = getFile();
+        FileEntity file = getFile();
 
         file.setName("new_name");
         file.setStorageName("lorem ipsum");
@@ -79,18 +80,18 @@ public class PostgresFileRepositoryTests {
     }
 
     @Transactional
-    public File getFile() {
-        FilePropertiesPojo fileProperties = new FilePropertiesPojo();
-        fileProperties
-                .setName("test.txt")
-                .setStorageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
-                .setType("plain/text");
+    public FileEntity getFile() {
+        FileEntity file = FileEntity.builder()
+                .name("test.txt")
+                .storageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
+                .type("plain/text")
+                .build();
 
-        return fileDao.save(fileProperties);
+        return fileDao.save(file);
     }
 
     @Transactional
-    public Resource getResource() throws MalformedURLException {
+    public ResourceEntity getResource() throws MalformedURLException {
         return postgresResourceRepository.save(getFile(), new URL("https://example.com"));
     }
 }

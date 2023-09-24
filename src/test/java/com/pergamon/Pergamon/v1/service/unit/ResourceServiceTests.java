@@ -2,11 +2,11 @@ package com.pergamon.Pergamon.v1.service.unit;
 
 import com.pergamon.Pergamon.v1.dao.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dao.PostgresResourceRepository;
-import com.pergamon.Pergamon.v1.entity.File;
-import com.pergamon.Pergamon.v1.entity.FileId;
-import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
-import com.pergamon.Pergamon.v1.entity.Resource;
-import com.pergamon.Pergamon.v1.entity.ResourceId;
+import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.domain.FileId;
+import com.pergamon.Pergamon.v1.domain.FilePropertiesPojo;
+import com.pergamon.Pergamon.v1.domain.ResourceEntity;
+import com.pergamon.Pergamon.v1.domain.ResourceId;
 import com.pergamon.Pergamon.v1.resource.ResourceCollectionModelCreator;
 import com.pergamon.Pergamon.v1.service.FileStorageService;
 import com.pergamon.Pergamon.v1.service.ResourceService;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = ResourceService.class)
 public class ResourceServiceTests {
-    private FilePropertiesPojo fileProperties;
+    private FileEntity fileEntity;
 
     @Autowired
     private ResourceService sut;
@@ -41,7 +41,7 @@ public class ResourceServiceTests {
     private URL url;
 
     @Mock
-    private File file;
+    private FileEntity file;
 
     @Mock
     private org.springframework.core.io.Resource fileResource;
@@ -60,7 +60,7 @@ public class ResourceServiceTests {
 
     @BeforeEach
     public void setUp() {
-        fileProperties = new FilePropertiesPojo();
+        fileEntity = FileEntity.builder().build();
 
         when(file.getName()).thenReturn("file.txt");
         when(file.getStorageName()).thenReturn(UUID.randomUUID().toString());
@@ -69,8 +69,8 @@ public class ResourceServiceTests {
 
     @Test
     public void testCreate_WhenCorrectData() throws Exception {
-        when(fileStorageService.storeFile(any(URL.class))).thenReturn(fileProperties);
-        when(fileDao.save(fileProperties)).thenReturn(file);
+        when(fileStorageService.storeFile(any(URL.class))).thenReturn(fileEntity);
+        when(fileDao.save(fileEntity)).thenReturn(file);
 
         sut.create(url);
 
@@ -79,7 +79,7 @@ public class ResourceServiceTests {
 
     @Test
     public void testList_WhenNoResources() throws Exception {
-        List<Resource> resources = getFilledResourceList();
+        List<ResourceEntity> resources = getFilledResourceList();
         when(resourceDao.list()).thenReturn(resources);
 
         assertSame(resources, sut.list());
@@ -87,7 +87,7 @@ public class ResourceServiceTests {
 
     @Test
     public void testList_WhenNoResourcesWithSearch() throws Exception {
-        List<Resource> resources = new ArrayList<>();
+        List<ResourceEntity> resources = new ArrayList<>();
         when(resourceDao.list("www")).thenReturn(resources);
 
         assertSame(resources, sut.list("www"));
@@ -95,7 +95,7 @@ public class ResourceServiceTests {
 
     @Test
     public void testList_WhenWithResourceWithSearch() throws Exception {
-        List<Resource> resources = getFilledResourceList();
+        List<ResourceEntity> resources = getFilledResourceList();
         when(resourceDao.list("www")).thenReturn(resources);
 
         assertSame(resources, sut.list("www"));
@@ -118,9 +118,9 @@ public class ResourceServiceTests {
         verify(fileStorageService, atLeastOnce()).updateFile(url, file);
     }
 
-    private List<Resource> getFilledResourceList() {
-        List<Resource> resources = new ArrayList<>();
-        resources.add(new Resource(new ResourceId(1),  new FileId(1), "name", LocalDateTime.now()));
+    private List<ResourceEntity> getFilledResourceList() {
+        List<ResourceEntity> resources = new ArrayList<>();
+        resources.add(new ResourceEntity(new ResourceId(1),  new FileId(1), "name", LocalDateTime.now()));
 
         return resources;
     }

@@ -1,7 +1,7 @@
 package com.pergamon.Pergamon.v1.service;
 
-import com.pergamon.Pergamon.v1.entity.File;
-import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
+import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.domain.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.exception.FileNotFoundException;
 import com.pergamon.Pergamon.v1.exception.FileStorageException;
 import org.apache.commons.io.FilenameUtils;
@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class FileStorageService {
@@ -31,31 +32,34 @@ public class FileStorageService {
         }
     }
 
-    public FilePropertiesPojo storeFile(URL url) {
-        FilePropertiesPojo filePropertiesPojo = new FilePropertiesPojo();
-        String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
+    public FileEntity storeFile(URL url) {
         String storedFileName = UUID.randomUUID().toString();
 
-        try {
-            if(fileName.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
-            }
 
-            filePropertiesPojo
-                    .setName(fileName)
-                    .setStorageName(storedFileName)
-                    .setType(url.openConnection().getContentType());
+        String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
+        if(fileName.contains("..")) {
+            throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+        }
+        try {
+            String contentType = url.openConnection().getContentType();
+
+            FileEntity fileEntity = FileEntity.builder()
+                    .name(fileName)
+                    .storageName(storedFileName)
+                    .type(contentType)
+                    .createdAt(LocalDateTime.now())
+                    .build();
 
             Path targetLocation = fileStorageLocation.resolve(storedFileName);
             Files.copy(url.openStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return filePropertiesPojo;
+            return fileEntity;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
 
-    public File updateFile(URL url, File file) throws IOException {
+    public FileEntity updateFile(URL url, FileEntity file) throws IOException {
         Path targetLocation = fileStorageLocation.resolve(file.getStorageName());
         String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
 

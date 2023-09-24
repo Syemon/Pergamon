@@ -1,9 +1,9 @@
 package com.pergamon.Pergamon.v1.dao;
 
-import com.pergamon.Pergamon.v1.entity.File;
-import com.pergamon.Pergamon.v1.entity.FileId;
-import com.pergamon.Pergamon.v1.entity.Resource;
-import com.pergamon.Pergamon.v1.entity.ResourceId;
+import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.domain.FileId;
+import com.pergamon.Pergamon.v1.domain.ResourceEntity;
+import com.pergamon.Pergamon.v1.domain.ResourceId;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
@@ -22,7 +22,7 @@ public class PostgresResourceRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Resource save(File file, URL url) {
+    public ResourceEntity save(FileEntity file, URL url) {
         LocalDateTime createdAt = LocalDateTime.now();
         String sql = "INSERT INTO resource(url, file_id, created_at) VALUES(?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -38,7 +38,7 @@ public class PostgresResourceRepository {
 
         int id = (int) keyHolder.getKeys().get(idColumn);
 
-        return new Resource(
+        return new ResourceEntity(
                 new ResourceId(id),
                 file.getId(),
                 url.toString(),
@@ -51,18 +51,18 @@ public class PostgresResourceRepository {
         return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM resource WHERE url=?)", Boolean.class, url.toString());
     }
 
-    public List<Resource> list() {
+    public List<ResourceEntity> list() {
         return jdbcTemplate.query("SELECT * FROM resource",
                 (PostgresResourceRepository::toResource));
     }
 
-    public List<Resource> list(String search) {
+    public List<ResourceEntity> list(String search) {
         return jdbcTemplate.query("SELECT * FROM resource WHERE url ilike '%'||?||'%'",
                 (PostgresResourceRepository::toResource), search);
     }
 
-    private static Resource toResource(ResultSet rs, int rowNum) throws SQLException {
-        return new Resource(
+    private static ResourceEntity toResource(ResultSet rs, int rowNum) throws SQLException {
+        return new ResourceEntity(
                 new ResourceId(rs.getInt("id")),
                 new FileId(rs.getInt("file_id")),
                 rs.getString("url"),

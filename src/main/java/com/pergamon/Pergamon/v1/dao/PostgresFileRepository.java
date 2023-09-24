@@ -1,9 +1,8 @@
 package com.pergamon.Pergamon.v1.dao;
 
-import com.pergamon.Pergamon.v1.entity.File;
-import com.pergamon.Pergamon.v1.entity.FileId;
-import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.domain.FileId;
+import com.pergamon.Pergamon.v1.domain.FilePropertiesPojo;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,16 +22,16 @@ public class PostgresFileRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public File save(FilePropertiesPojo filePropertiesPojo) {
+    public FileEntity save(FileEntity fileEntity) {
         LocalDateTime createdAt = LocalDateTime.now();
         String sql = "INSERT INTO file(name, storage_name, type, created_at) VALUES(?, ?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         String idColumn = "id";
         jdbcTemplate.update(con -> {
                     PreparedStatement ps = con.prepareStatement(sql, new String[]{idColumn});
-                    ps.setString(1, filePropertiesPojo.getName());
-                    ps.setString(2, filePropertiesPojo.getStorageName());
-                    ps.setString(3, filePropertiesPojo.getType());
+                    ps.setString(1, fileEntity.getName());
+                    ps.setString(2, fileEntity.getStorageName());
+                    ps.setString(3, fileEntity.getType());
                     ps.setTimestamp(4, Timestamp.valueOf(createdAt));
                     return ps;
                 }
@@ -40,21 +39,15 @@ public class PostgresFileRepository {
 
         int id = (int) keyHolder.getKeys().get(idColumn);
 
-        return new File(
-                new FileId(id),
-                filePropertiesPojo.getName(),
-                filePropertiesPojo.getStorageName(),
-                filePropertiesPojo.getType(),
-                createdAt,
-                null
-        );
+        return fileEntity.setCreatedAt(createdAt)
+                .setId(new FileId(id));
     }
 
-    public void update(File file) {
+    public void update(FileEntity file) {
         jdbcTemplate.update("UPDATE file SET name=?, storage_name=?, type=?, updated_at=NOW()", file.getName(), file.getStorageName(), file.getType());
     }
 
-    public File findByUrl(URL url) {
+    public FileEntity findByUrl(URL url) {
         return jdbcTemplate.queryForObject("""
                         SELECT f.*
                         FROM resource AS r 
@@ -65,17 +58,17 @@ public class PostgresFileRepository {
 
     }
 
-    public Optional<File> findById(FileId id) {
+    public Optional<FileEntity> findById(FileId id) {
         try {
-            File result = jdbcTemplate.queryForObject("SELECT * FROM file f WHERE f.id = ?", PostgresFileRepository::toFile, id.id());
+            FileEntity result = jdbcTemplate.queryForObject("SELECT * FROM file f WHERE f.id = ?", PostgresFileRepository::toFile, id.id());
             return Optional.ofNullable(result);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
-    private static File toFile(ResultSet rs, int rowNum) throws SQLException {
-        return new File(
+    private static FileEntity toFile(ResultSet rs, int rowNum) throws SQLException {
+        return new FileEntity(
                 new FileId(rs.getInt("id")),
                 rs.getString("name"),
                 rs.getString("storage_name"),

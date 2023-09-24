@@ -2,10 +2,9 @@ package com.pergamon.Pergamon.v1.dao.integration;
 
 import com.pergamon.Pergamon.v1.dao.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dao.PostgresResourceRepository;
-import com.pergamon.Pergamon.v1.entity.File;
-import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
-import com.pergamon.Pergamon.v1.entity.Resource;
-import org.assertj.core.data.TemporalUnitOffset;
+import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.domain.FilePropertiesPojo;
+import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +47,9 @@ public class PostgresResourceRepositoryTests {
     @Test
     @Transactional
     public void testList() {
-        Resource resource = getResource();
+        ResourceEntity resource = getResource();
 
-        List<Resource> resources = sut.list();
+        List<ResourceEntity> resources = sut.list();
 
         assertThat(resources.get(0).getId()).isEqualTo(resource.getId());
         assertThat(resources.get(0).getFileId()).isEqualTo(resource.getFileId());
@@ -60,9 +59,9 @@ public class PostgresResourceRepositoryTests {
     @Test
     @Transactional
     public void testList_WhenSearchingForNotExistentUrl_ReturnEmptyList() {
-        Resource resource = getResource();
+        ResourceEntity resource = getResource();
 
-        List<Resource> resources = sut.list("search");
+        List<ResourceEntity> resources = sut.list("search");
 
         assertThat(resources).doesNotContain(resource);
     }
@@ -70,12 +69,12 @@ public class PostgresResourceRepositoryTests {
     @Test
     @Transactional
     public void testList_WhenSearchingForExistentUrl_ReturnList() {
-        Resource resource = getResource();
+        ResourceEntity resource = getResource();
 
-        List<Resource> resources = sut.list("example");
+        List<ResourceEntity> resources = sut.list("example");
 
         assertThat(resources).hasSize(1);
-        Resource result = resources.get(0);
+        ResourceEntity result = resources.get(0);
         assertThat(result.getId().id()).isNotZero();
         assertThat(result.getFileId().id()).isNotZero();
         assertThat(result.getUrl()).isEqualTo(URL);
@@ -86,12 +85,12 @@ public class PostgresResourceRepositoryTests {
     @Test
     @Transactional
     public void testList_WhenSearchingForExistentUrlWithDifferentCase_ReturnList() {
-        Resource resource = getResource();
+        ResourceEntity resource = getResource();
 
-        List<Resource> resources = sut.list("eXample");
+        List<ResourceEntity> resources = sut.list("eXample");
 
         assertThat(resources).hasSize(1);
-        Resource result = resources.get(0);
+        ResourceEntity result = resources.get(0);
         assertThat(result.getId().id()).isNotZero();
         assertThat(result.getFileId().id()).isNotZero();
         assertThat(result.getUrl()).isEqualTo(URL);
@@ -115,18 +114,18 @@ public class PostgresResourceRepositoryTests {
     }
 
     @Transactional
-    public File getFile() {
-        FilePropertiesPojo fileProperties = new FilePropertiesPojo();
-        fileProperties
-                .setName("test.txt")
-                .setStorageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
-                .setType("plain/text");
+    public FileEntity getFile() {
+        FileEntity file = FileEntity.builder()
+                .name("test.txt")
+                .storageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
+                .type("plain/text")
+                .build();
 
-        return postgresFileRepository.save(fileProperties);
+        return postgresFileRepository.save(file);
     }
 
     @Transactional
-    public Resource getResource() {
+    public ResourceEntity getResource() {
         return sut.save(getFile(), url);
     }
 }

@@ -2,7 +2,7 @@ package com.pergamon.Pergamon.v1.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pergamon.Pergamon.v1.controller.ResourceController;
-import com.pergamon.Pergamon.v1.entity.Resource;
+import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +84,7 @@ public class ResourceControllerTest {
 
     @Test
     public void testList_WhenSuccess() throws Exception {
-        List<Resource> resources = new ArrayList<>();
+        List<ResourceEntity> resources = new ArrayList<>();
 
         when(resourceService.list()).thenReturn(resources);
 
@@ -96,7 +96,7 @@ public class ResourceControllerTest {
 
     @Test
     public void testList_WithSearchParameter() throws Exception {
-        List<Resource> resources = new ArrayList<>();
+        List<ResourceEntity> resources = new ArrayList<>();
 
         when(resourceService.list()).thenReturn(resources);
 

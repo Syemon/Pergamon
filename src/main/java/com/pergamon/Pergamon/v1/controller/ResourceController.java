@@ -1,6 +1,6 @@
 package com.pergamon.Pergamon.v1.controller;
 
-import com.pergamon.Pergamon.v1.entity.Resource;
+import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.exception.ResourceConnectionException;
 import com.pergamon.Pergamon.v1.exception.ResourceNotFoundException;
 import com.pergamon.Pergamon.v1.request.ResourceRequest;
@@ -49,7 +49,7 @@ public class ResourceController {
 
     @GetMapping(value = "/resources", params = {"search"})
     public ResponseEntity<CollectionModel<ResourceResource>> list(@RequestParam(name = "search") String search) throws MalformedURLException {
-        List<Resource> folders = resourceService.list(search);
+        List<ResourceEntity> folders = resourceService.list(search);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", APPLICATION_HAL_JSON);
@@ -61,7 +61,7 @@ public class ResourceController {
 
     @GetMapping(value = "/resources")
     public ResponseEntity<CollectionModel<ResourceResource>> list() throws MalformedURLException {
-        List<Resource> folders = resourceService.list();
+        List<ResourceEntity> folders = resourceService.list();
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", APPLICATION_HAL_JSON);

@@ -1,7 +1,8 @@
 package com.pergamon.Pergamon.v1.service.unit;
 
 import com.pergamon.Pergamon.PergamonApplication;
-import com.pergamon.Pergamon.v1.entity.FilePropertiesPojo;
+import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.domain.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.service.FileStorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.Test;
@@ -42,10 +43,10 @@ public class FileStorageServiceTests {
         when(url.openConnection()).thenReturn(urlConnection);
         when(urlConnection.getContentType()).thenReturn("plain/text");
 
-        FilePropertiesPojo fileProperties = fileStorageService.storeFile(url);
+        FileEntity fileEntity = fileStorageService.storeFile(url);
 
-        assertEquals(fileProperties.getName(), "test.txt");
-        assertTrue(fileProperties.getStorageName()
+        assertEquals(fileEntity.getName(), "test.txt");
+        assertTrue(fileEntity.getStorageName()
                 .matches("[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}"));
     }
 }
