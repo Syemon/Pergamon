@@ -1,4 +1,4 @@
-package com.pergamon.Pergamon.v1.service.unit;
+package com.pergamon.Pergamon.v1.service;
 
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
@@ -6,9 +6,6 @@ import com.pergamon.Pergamon.v1.domain.FileEntity;
 import com.pergamon.Pergamon.v1.domain.FileId;
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceId;
-import com.pergamon.Pergamon.v1.service.ResourceCollectionModelCreator;
-import com.pergamon.Pergamon.v1.service.FileStorageService;
-import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

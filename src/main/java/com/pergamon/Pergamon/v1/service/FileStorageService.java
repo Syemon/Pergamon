@@ -18,7 +18,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class FileStorageService {
+class FileStorageService {
     private final Path fileStorageLocation;
 
     public FileStorageService(String uploadDirPath) {

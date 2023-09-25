@@ -4,7 +4,6 @@ import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @org.springframework.context.annotation.Configuration
 public class ServiceConfiguration {

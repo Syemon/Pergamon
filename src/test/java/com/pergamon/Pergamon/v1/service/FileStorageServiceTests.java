@@ -1,4 +1,4 @@
-package com.pergamon.Pergamon.v1.service.unit;
+package com.pergamon.Pergamon.v1.service;
 
 import com.pergamon.Pergamon.PergamonApplication;
 import com.pergamon.Pergamon.v1.domain.FileEntity;

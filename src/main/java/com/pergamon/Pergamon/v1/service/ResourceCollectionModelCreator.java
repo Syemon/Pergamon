@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResourceCollectionModelCreator {
+class ResourceCollectionModelCreator {
 
     private final PostgresFileRepository postgresFileRepository;
 
