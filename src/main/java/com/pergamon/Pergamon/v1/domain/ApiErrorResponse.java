@@ -1,4 +1,4 @@
-package com.pergamon.Pergamon.v1.exception;
+package com.pergamon.Pergamon.v1.domain;
 
 public class ApiErrorResponse {
     private int status;

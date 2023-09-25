@@ -4,7 +4,7 @@ import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.domain.FileEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
-import com.pergamon.Pergamon.v1.exception.ResourceCreationException;
+import com.pergamon.Pergamon.v1.domain.ResourceCreationException;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpHeaders;

@@ -1,4 +1,4 @@
-package com.pergamon.Pergamon.v1.exception;
+package com.pergamon.Pergamon.v1.domain;
 
 public class ResourceConnectionException extends RuntimeException {
     public ResourceConnectionException(String message) {

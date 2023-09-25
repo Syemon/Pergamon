@@ -1,4 +1,4 @@
-package com.pergamon.Pergamon.v1.exception;
+package com.pergamon.Pergamon.v1.domain;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
