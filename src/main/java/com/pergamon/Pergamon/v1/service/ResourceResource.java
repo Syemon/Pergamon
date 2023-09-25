@@ -1,7 +1,7 @@
-package com.pergamon.Pergamon.v1.resource;
+package com.pergamon.Pergamon.v1.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pergamon.Pergamon.v1.controller.ResourceController;
+import com.pergamon.Pergamon.v1.web.ResourceController;
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import org.springframework.hateoas.RepresentationModel;
 

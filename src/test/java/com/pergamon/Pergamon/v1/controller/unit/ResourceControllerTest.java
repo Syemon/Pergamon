@@ -1,7 +1,7 @@
 package com.pergamon.Pergamon.v1.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pergamon.Pergamon.v1.controller.ResourceController;
+import com.pergamon.Pergamon.v1.web.ResourceController;
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.junit.jupiter.api.Test;

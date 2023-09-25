@@ -1,10 +1,10 @@
-package com.pergamon.Pergamon.v1;
+package com.pergamon.Pergamon.v1.service;
 
-import com.pergamon.Pergamon.v1.dao.PostgresFileRepository;
-import com.pergamon.Pergamon.v1.dao.PostgresResourceRepository;
+import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
+import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.service.FileStorageService;
 import com.pergamon.Pergamon.v1.service.ResourceService;
-import com.pergamon.Pergamon.v1.resource.ResourceCollectionModelCreator;
+import com.pergamon.Pergamon.v1.service.ResourceCollectionModelCreator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;

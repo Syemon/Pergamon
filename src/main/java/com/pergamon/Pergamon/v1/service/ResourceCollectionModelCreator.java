@@ -1,6 +1,6 @@
-package com.pergamon.Pergamon.v1.resource;
+package com.pergamon.Pergamon.v1.service;
 
-import com.pergamon.Pergamon.v1.dao.PostgresFileRepository;
+import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.domain.FileEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import org.springframework.hateoas.CollectionModel;

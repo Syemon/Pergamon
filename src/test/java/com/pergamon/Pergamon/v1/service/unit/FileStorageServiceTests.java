@@ -2,7 +2,6 @@ package com.pergamon.Pergamon.v1.service.unit;
 
 import com.pergamon.Pergamon.PergamonApplication;
 import com.pergamon.Pergamon.v1.domain.FileEntity;
-import com.pergamon.Pergamon.v1.domain.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.service.FileStorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.Test;

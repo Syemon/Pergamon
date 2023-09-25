@@ -1,8 +1,7 @@
-package com.pergamon.Pergamon.v1.dao;
+package com.pergamon.Pergamon.v1.dataaccess;
 
 import com.pergamon.Pergamon.v1.domain.FileEntity;
 import com.pergamon.Pergamon.v1.domain.FileId;
-import com.pergamon.Pergamon.v1.domain.FilePropertiesPojo;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

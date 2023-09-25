@@ -1,10 +1,9 @@
 package com.pergamon.Pergamon.v1.dao.integration;
 
 import com.pergamon.Pergamon.PergamonApplication;
-import com.pergamon.Pergamon.v1.dao.PostgresFileRepository;
-import com.pergamon.Pergamon.v1.dao.PostgresResourceRepository;
+import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
+import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.domain.FileEntity;
-import com.pergamon.Pergamon.v1.domain.FilePropertiesPojo;
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

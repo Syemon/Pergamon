@@ -1,10 +1,9 @@
-package com.pergamon.Pergamon.v1.resource;
+package com.pergamon.Pergamon.v1.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class ResourceBody {
     private String url;

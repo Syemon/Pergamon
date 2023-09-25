@@ -1,5 +1,6 @@
 package com.pergamon.Pergamon.v1.resource;
 
+import com.pergamon.Pergamon.v1.service.ResourceBody;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,10 +1,10 @@
-package com.pergamon.Pergamon.v1.controller;
+package com.pergamon.Pergamon.v1.web;
 
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.exception.ResourceConnectionException;
 import com.pergamon.Pergamon.v1.exception.ResourceNotFoundException;
-import com.pergamon.Pergamon.v1.request.ResourceRequest;
-import com.pergamon.Pergamon.v1.resource.ResourceResource;
+import com.pergamon.Pergamon.v1.domain.ResourceRequest;
+import com.pergamon.Pergamon.v1.service.ResourceResource;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import jakarta.validation.Valid;
 import org.springframework.hateoas.CollectionModel;
@@ -37,12 +37,12 @@ public class ResourceController {
     @PutMapping(value = "/resources")
     public ResponseEntity<Void> upsert(@Valid @RequestBody ResourceRequest resourceRequest) throws IOException {
         try {
-            resourceRequest.getUrl().openConnection().connect();
+            resourceRequest.url().openConnection().connect();
         } catch (IOException exc) {
             throw new ResourceConnectionException("It's impossible to connect to given resource. Check given URL or try again later");
         }
 
-        resourceService.upsert(resourceRequest.getUrl());
+        resourceService.upsert(resourceRequest.url());
 
         return ResponseEntity.accepted().build();
     }
