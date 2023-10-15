@@ -2,8 +2,10 @@ package com.pergamon.Pergamon.v1.dataaccess;
 
 import com.pergamon.Pergamon.v1.domain.FileEntity;
 import com.pergamon.Pergamon.v1.domain.FileId;
+import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceId;
+import com.pergamon.Pergamon.v1.domain.ResourceStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
@@ -38,12 +40,12 @@ public class PostgresResourceRepository {
 
         int id = (int) keyHolder.getKeys().get(idColumn);
 
-        return new ResourceEntity(
-                new ResourceId(id),
-                file.getId(),
-                url.toString(),
-                createdAt
-        );
+        return new ResourceEntity()
+                .setId(new ResourceId(id))
+                .setFileId(file.getId())
+                .setStatus(ResourceStatus.NEW)
+                .setUrl(url.toString())
+                .setCreatedAt(createdAt);
     }
 
     public Boolean exists(URL url) {
@@ -62,10 +64,35 @@ public class PostgresResourceRepository {
     }
 
     private static ResourceEntity toResource(ResultSet rs, int rowNum) throws SQLException {
-        return new ResourceEntity(
-                new ResourceId(rs.getInt("id")),
-                new FileId(rs.getInt("file_id")),
-                rs.getString("url"),
-                rs.getObject("created_at", LocalDateTime.class));
+        return new ResourceEntity()
+                .setId(new ResourceId(rs.getInt("id")))
+                .setFileId(new FileId(rs.getInt("file_id")))
+                .setStatus(ResourceStatus.NEW)
+                .setUrl(rs.getString("url"))
+                .setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+    }
+
+    public ResourceEntity create(ResourceCommand resourceCommand) {
+        LocalDateTime createdAt = LocalDateTime.now();
+        String url = resourceCommand.getUrl().toString();
+        String sql = "INSERT INTO resource(url, status, created_at) VALUES(?, ?, ?)";
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        String idColumn = "id";
+        jdbcTemplate.update(con -> {
+                    PreparedStatement ps = con.prepareStatement(sql, new String[]{idColumn});
+                    ps.setString(1, resourceCommand.getUrl().toString());
+                    ps.setString(2, ResourceStatus.NEW.name());
+                    ps.setTimestamp(3, Timestamp.valueOf(createdAt));
+                    return ps;
+                }
+                , keyHolder);
+
+        int id = (int) keyHolder.getKeys().get(idColumn);
+
+        return new ResourceEntity()
+                .setId(new ResourceId(id))
+                .setStatus(ResourceStatus.NEW)
+                .setUrl(url)
+                .setCreatedAt(createdAt);
     }
 }

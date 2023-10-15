@@ -12,6 +12,7 @@ CREATE TABLE resource
     id SERIAL PRIMARY KEY,
     file_id int,
     name text,
+    status text,
     storage_name text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone,

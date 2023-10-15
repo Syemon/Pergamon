@@ -116,7 +116,11 @@ public class ResourceServiceTests {
 
     private List<ResourceEntity> getFilledResourceList() {
         List<ResourceEntity> resources = new ArrayList<>();
-        resources.add(new ResourceEntity(new ResourceId(1),  new FileId(1), "name", LocalDateTime.now()));
+        resources.add(new ResourceEntity()
+                .setId(new ResourceId(1))
+                .setFileId(new FileId(1))
+                .setUrl("name")
+                .setCreatedAt(LocalDateTime.now()));
 
         return resources;
     }

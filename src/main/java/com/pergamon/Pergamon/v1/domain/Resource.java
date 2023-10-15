@@ -5,12 +5,13 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ResourceEntity {
+public class Resource {
+
     private ResourceId id;
     private FileId fileId;
     private String url;
-    private ResourceStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-
+    private ResourceStatus status;
+    private int attemptNumber;
 }

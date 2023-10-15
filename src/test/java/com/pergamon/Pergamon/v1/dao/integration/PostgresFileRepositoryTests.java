@@ -1,14 +1,17 @@
 package com.pergamon.Pergamon.v1.dao.integration;
 
 import com.pergamon.Pergamon.PergamonApplication;
+import com.pergamon.Pergamon.PostgresTestContainerResourceTest;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.domain.FileEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
+import com.pergamon.Pergamon.v1.service.Profile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.MalformedURLException;
@@ -17,7 +20,8 @@ import java.net.URL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = PergamonApplication.class)
-public class PostgresFileRepositoryTests {
+@ActiveProfiles(value = Profile.TEST_FLYWAY)
+public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTest {
     private FileEntity fileEntity;
 
     @Autowired

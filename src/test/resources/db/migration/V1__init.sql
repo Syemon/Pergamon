@@ -13,6 +13,7 @@ CREATE TABLE resource
     id SERIAL PRIMARY KEY,
     file_id int,
     url text,
+    status text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone,
     CONSTRAINT fk_file
