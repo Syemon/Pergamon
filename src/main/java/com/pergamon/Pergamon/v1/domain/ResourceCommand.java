@@ -1,10 +1,12 @@
 package com.pergamon.Pergamon.v1.domain;
 
-import lombok.Value;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 import java.net.URL;
 
-@Value
+@Data
 public class ResourceCommand {
+    @NotNull
     URL url;
 }

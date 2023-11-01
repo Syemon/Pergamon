@@ -2,7 +2,6 @@ package com.pergamon.Pergamon.v1.service;
 
 import com.pergamon.Pergamon.PergamonApplication;
 import com.pergamon.Pergamon.v1.domain.FileEntity;
-import com.pergamon.Pergamon.v1.service.FileStorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -17,7 +16,7 @@ import java.net.URLConnection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = PergamonApplication.class)
 @AutoConfigureMockMvc()

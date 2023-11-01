@@ -45,15 +45,16 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
 
     @Test
     @Transactional
-    public void testCreate_WhenCorrectData() {
-        sut.save(getFile(), url);
+    public void testCreate_WhenCorrectData() throws MalformedURLException {
+        sut.save(getFile(), new URL("https://testcreate.qwerty"));
     }
 
     @Test
     @Transactional
     public void create() throws MalformedURLException {
         // given
-        ResourceCommand command = new ResourceCommand(new URL(URL));
+        URL url = new URL("https://newurl.xyz");
+        ResourceCommand command = new ResourceCommand().setUrl(url);
 
         // when
         ResourceEntity result = sut.create(command);
@@ -63,7 +64,7 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
         assertThat(result.getId().id()).isNotZero();
         assertThat(result.getFileId()).isNull();
         assertThat(result.getStatus()).isEqualTo(ResourceStatus.NEW);
-        assertThat(result.getUrl()).isEqualTo(URL);
+        assertThat(result.getUrl()).isEqualTo(url.toString());
         assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(30L, ChronoUnit.SECONDS));
         assertThat(result.getModifiedAt()).isNull();
     }
@@ -71,20 +72,17 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
     @Test
     @Transactional
     public void testList() {
-        ResourceEntity resource = getResource();
-
         List<ResourceEntity> resources = sut.list();
 
-        assertThat(resources.get(0).getId()).isEqualTo(resource.getId());
-        assertThat(resources.get(0).getFileId()).isEqualTo(resource.getFileId());
-        assertThat(resources.get(0).getUrl()).isEqualTo(resource.getUrl());
+        assertThat(resources.get(0).getId().id()).isEqualTo(100);
+        assertThat(resources.get(0).getFileId().id()).isNull();
+        assertThat(resources.get(0).getUrl()).isEqualTo("https://loremipsum.net/1");
     }
 
     @Test
     @Transactional
     public void testList_WhenSearchingForNotExistentUrl_ReturnEmptyList() {
-        ResourceEntity resource = getResource();
-
+        ResourceEntity resource = sut.findByUrl(URL).get();
         List<ResourceEntity> resources = sut.list("search");
 
         assertThat(resources).doesNotContain(resource);
@@ -93,7 +91,7 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
     @Test
     @Transactional
     public void testList_WhenSearchingForExistentUrl_ReturnList() {
-        ResourceEntity resource = getResource();
+        ResourceEntity resource = sut.findByUrl(URL).get();
 
         List<ResourceEntity> resources = sut.list("example");
 
@@ -109,8 +107,6 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
     @Test
     @Transactional
     public void testList_WhenSearchingForExistentUrlWithDifferentCase_ReturnList() {
-        ResourceEntity resource = getResource();
-
         List<ResourceEntity> resources = sut.list("eXample");
 
         assertThat(resources).hasSize(1);
@@ -124,16 +120,12 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
     @Test
     @Transactional
     public void testExists_WhenNotExists_ReturnFalse() throws MalformedURLException {
-        getResource();
-
         assertThat(sut.exists(new URL("https://example2.com"))).isFalse();
     }
 
     @Test
     @Transactional
     public void testExists_WhenExists_ReturnTrue() {
-        getResource();
-
         assertThat(sut.exists(url)).isTrue();
     }
 
@@ -146,10 +138,5 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
                 .build();
 
         return postgresFileRepository.save(file);
-    }
-
-    @Transactional
-    public ResourceEntity getResource() {
-        return sut.save(getFile(), url);
     }
 }

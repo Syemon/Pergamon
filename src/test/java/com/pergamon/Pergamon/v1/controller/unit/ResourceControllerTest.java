@@ -1,6 +1,8 @@
 package com.pergamon.Pergamon.v1.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pergamon.Pergamon.PostgresTestContainerResourceTest;
+import com.pergamon.Pergamon.v1.service.Profile;
 import com.pergamon.Pergamon.v1.web.ResourceController;
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.service.ResourceService;
@@ -10,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.net.URL;
@@ -28,7 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ResourceControllerTest {
+@ActiveProfiles(value = Profile.TEST_FLYWAY)
+public class ResourceControllerTest extends PostgresTestContainerResourceTest {
     private Map<String, String> body = new HashMap<>();
 
     private ObjectMapper mapper = new ObjectMapper();

@@ -58,8 +58,9 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
     @Test
     @Transactional
     public void testFindByUrl_WhenExists_ReturnFile() throws MalformedURLException {
-        ResourceEntity resource = getResource();
         URL url = new URL("https://example.com");
+        ResourceEntity resource = postgresResourceRepository.findByUrl(url.toString()).get();
+
 
         FileEntity file = fileDao.findByUrl(url);
 
@@ -91,10 +92,5 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
                 .build();
 
         return fileDao.save(file);
-    }
-
-    @Transactional
-    public ResourceEntity getResource() throws MalformedURLException {
-        return postgresResourceRepository.save(getFile(), new URL("https://example.com"));
     }
 }

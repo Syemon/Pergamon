@@ -12,7 +12,7 @@ CREATE TABLE resource
 (
     id SERIAL PRIMARY KEY,
     file_id int,
-    url text,
+    url text unique,
     status text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone,

@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class PostgresResourceRepository {
     private final JdbcTemplate jdbcTemplate;
@@ -49,8 +50,13 @@ public class PostgresResourceRepository {
     }
 
     public Boolean exists(URL url) {
-        System.out.println(url.toString());
         return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM resource WHERE url=?)", Boolean.class, url.toString());
+    }
+
+    public Optional<ResourceEntity> findByUrl(String url) {
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject("SELECT * FROM resource WHERE url=?", PostgresResourceRepository::toResource, url)
+        );
     }
 
     public List<ResourceEntity> list() {
@@ -64,9 +70,10 @@ public class PostgresResourceRepository {
     }
 
     private static ResourceEntity toResource(ResultSet rs, int rowNum) throws SQLException {
+        Integer fileIdValue = rs.getInt("file_id") == 0 ? null : rs.getInt("file_id");
         return new ResourceEntity()
                 .setId(new ResourceId(rs.getInt("id")))
-                .setFileId(new FileId(rs.getInt("file_id")))
+                .setFileId(new FileId(fileIdValue))
                 .setStatus(ResourceStatus.NEW)
                 .setUrl(rs.getString("url"))
                 .setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
