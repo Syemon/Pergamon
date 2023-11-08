@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Bean;
 public class ServiceConfiguration {
 
     @Bean
-    public FileStorageService fileStorageService(@Value("${file.upload-dir}") String uploadDirPath) {
-        return new FileStorageService(uploadDirPath);
+    public FileService fileStorageService(@Value("${file.upload-dir}") String uploadDirPath) {
+        return new FileService(uploadDirPath);
     }
 
     @Bean
@@ -22,7 +22,7 @@ public class ServiceConfiguration {
 
     @Bean
     public ResourceService resourceService(
-            FileStorageService fileStorageService,
+            FileService fileService,
             PostgresFileRepository postgresFileRepository,
             PostgresResourceRepository postgresResourceRepository,
             ResourceCollectionModelCreator resourceCollectionModelCreator,
@@ -30,7 +30,7 @@ public class ServiceConfiguration {
             ResourceQueryRepository resourceQueryRepository
     ) {
         return new ResourceService(
-                fileStorageService,
+                fileService,
                 postgresFileRepository,
                 postgresResourceRepository,
                 resourceCollectionModelCreator,

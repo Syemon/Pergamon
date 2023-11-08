@@ -27,7 +27,7 @@ import java.util.Optional;
 @Slf4j
 @AllArgsConstructor
 public class ResourceService {
-    private final FileStorageService fileStorageService;
+    private final FileService fileService;
     private final PostgresFileRepository fileDao;
     private final PostgresResourceRepository resourceDao;
     private final ResourceCollectionModelCreator resourceCollectionModelCreator;
@@ -48,12 +48,10 @@ public class ResourceService {
         create(resourceCommand);
     }
 
-
-
     @Transactional(rollbackFor = IOException.class)
     public void create(ResourceCommand resourceCommand) {//TODO: create before storage + set Status
         URL url = resourceCommand.getUrl();
-        FileEntity fileEntity = fileStorageService.storeFile(url);
+        FileEntity fileEntity = fileService.storeFile(url);
 
         try {
             FileEntity file = fileDao.save(fileEntity);
@@ -66,7 +64,7 @@ public class ResourceService {
     @Transactional
     public void update(URL url) throws IOException {
         FileEntity file = fileDao.findByUrl(url);
-        FileEntity updateFile = fileStorageService.updateFile(url, file);
+        FileEntity updateFile = fileService.updateFile(url, file);
 
         fileDao.update(updateFile);
     }
@@ -80,7 +78,7 @@ public class ResourceService {
     public ResponseEntity<org.springframework.core.io.Resource> download(URL url) {
         FileEntity file = fileDao.findByUrl(url);
 
-        org.springframework.core.io.Resource fileResource =  fileStorageService.loadFileAsResource(
+        org.springframework.core.io.Resource fileResource =  fileService.loadFileAsResource(
                 file.getStorageName());
 
         return ResponseEntity.ok()

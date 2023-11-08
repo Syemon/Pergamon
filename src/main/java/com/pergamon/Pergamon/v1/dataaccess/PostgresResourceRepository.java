@@ -2,6 +2,7 @@ package com.pergamon.Pergamon.v1.dataaccess;
 
 import com.pergamon.Pergamon.v1.domain.FileEntity;
 import com.pergamon.Pergamon.v1.domain.FileId;
+import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceId;
@@ -71,10 +72,11 @@ public class PostgresResourceRepository {
 
     private static ResourceEntity toResource(ResultSet rs, int rowNum) throws SQLException {
         Integer fileIdValue = rs.getInt("file_id") == 0 ? null : rs.getInt("file_id");
+        FileId fileId = fileIdValue != null ? new FileId(fileIdValue) : null;
         return new ResourceEntity()
                 .setId(new ResourceId(rs.getInt("id")))
-                .setFileId(new FileId(fileIdValue))
-                .setStatus(ResourceStatus.NEW)
+                .setFileId(fileId)
+                .setStatus(ResourceStatus.valueOf(rs.getString("status")))
                 .setUrl(rs.getString("url"))
                 .setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
     }
@@ -101,5 +103,43 @@ public class PostgresResourceRepository {
                 .setStatus(ResourceStatus.NEW)
                 .setUrl(url)
                 .setCreatedAt(createdAt);
+    }
+
+    public ResourceEntity save(Resource resource) {
+        LocalDateTime modifiedAt = LocalDateTime.now();
+        Integer fileId = resource.getFileId() != null ? resource.getFileId().id() : null;
+        String sql = """
+            UPDATE
+                resource
+            SET
+                file_id=?,
+                url=?, 
+                updated_at=?, 
+                status=?, 
+                attemptnumber=?
+            WHERE
+                id = ?
+                """;
+        String idColumn = "id";
+        jdbcTemplate.update(con -> {
+                    PreparedStatement ps = con.prepareStatement(sql, new String[]{idColumn});
+                    ps.setObject(1, fileId);
+                    ps.setString(2, resource.getUrl());
+                    ps.setTimestamp(3, Timestamp.valueOf(modifiedAt));
+                    ps.setString(4, resource.getUrl());
+                    ps.setInt(5, resource.getAttemptNumber());
+                    ps.setInt(6, resource.getId().id());
+                    return ps;
+                });
+
+        resource.setModifiedAt(modifiedAt);
+        return new ResourceEntity()
+                .setId(resource.getId())
+                .setStatus(resource.getStatus())
+                .setUrl(resource.getUrl())
+                .setCreatedAt(resource.getCreatedAt())
+                .setModifiedAt(resource.getModifiedAt())
+                .setFileId(resource.getFileId())
+                .setAttemptNumber(resource.getAttemptNumber());
     }
 }

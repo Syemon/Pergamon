@@ -75,7 +75,7 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
         List<ResourceEntity> resources = sut.list();
 
         assertThat(resources.get(0).getId().id()).isEqualTo(100);
-        assertThat(resources.get(0).getFileId().id()).isNull();
+        assertThat(resources.get(0).getFileId()).isNull();
         assertThat(resources.get(0).getUrl()).isEqualTo("https://loremipsum.net/1");
     }
 

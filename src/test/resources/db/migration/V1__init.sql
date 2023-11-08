@@ -16,6 +16,7 @@ CREATE TABLE resource
     status text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone,
+    attemptnumber int,
     CONSTRAINT fk_file
         FOREIGN KEY(file_id)
             REFERENCES file(id)

@@ -41,7 +41,7 @@ public class ResourceServiceTests {
     private org.springframework.core.io.Resource fileResource;
 
     @Mock
-    private FileStorageService fileStorageService;
+    private FileService fileService;
 
     @Mock
     private PostgresFileRepository fileDao;
@@ -63,7 +63,7 @@ public class ResourceServiceTests {
 
     @Test
     public void testCreate_WhenCorrectData() throws Exception {
-        when(fileStorageService.storeFile(any(URL.class))).thenReturn(fileEntity);
+        when(fileService.storeFile(any(URL.class))).thenReturn(fileEntity);
         when(fileDao.save(fileEntity)).thenReturn(fileEntity);
 
         sut.create(resourceCommand);
@@ -108,7 +108,7 @@ public class ResourceServiceTests {
 
         sut.update(url);
 
-        verify(fileStorageService, atLeastOnce()).updateFile(url, fileEntity);
+        verify(fileService, atLeastOnce()).updateFile(url, fileEntity);
     }
 
     private List<ResourceEntity> getFilledResourceList() {

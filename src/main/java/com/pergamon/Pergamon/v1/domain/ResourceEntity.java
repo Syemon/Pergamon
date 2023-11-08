@@ -12,5 +12,6 @@ public class ResourceEntity {
     private ResourceStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private int attemptNumber;
 
 }

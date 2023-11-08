@@ -5,6 +5,13 @@ import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 
 public class ResourceMapper {
     public Resource mapResourceEntityToResource(ResourceEntity resourceEntity) {
-        return null;
+        return new Resource()
+                .setId(resourceEntity.getId())
+                .setFileId(resourceEntity.getFileId())
+                .setCreatedAt(resourceEntity.getCreatedAt())
+                .setModifiedAt(resourceEntity.getModifiedAt())
+                .setUrl(resourceEntity.getUrl())
+                .setStatus(resourceEntity.getStatus())
+                .setAttemptNumber(resourceEntity.getAttemptNumber());
     }
 }

@@ -20,9 +20,9 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = PergamonApplication.class)
 @AutoConfigureMockMvc()
-public class FileStorageServiceTests {
+public class FileServiceTests {
     @Autowired
-    private FileStorageService fileStorageService;
+    private FileService fileService;
 
     @Mock
     private URL url;
@@ -41,7 +41,7 @@ public class FileStorageServiceTests {
         when(url.openConnection()).thenReturn(urlConnection);
         when(urlConnection.getContentType()).thenReturn("plain/text");
 
-        FileEntity fileEntity = fileStorageService.storeFile(url);
+        FileEntity fileEntity = fileService.storeFile(url);
 
         assertEquals(fileEntity.getName(), "test.txt");
         assertTrue(fileEntity.getStorageName()

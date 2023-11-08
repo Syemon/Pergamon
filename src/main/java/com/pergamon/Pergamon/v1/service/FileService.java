@@ -18,10 +18,10 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-class FileStorageService {
+class FileService {
     private final Path fileStorageLocation;
 
-    public FileStorageService(String uploadDirPath) {
+    public FileService(String uploadDirPath) {
         fileStorageLocation = Paths.get(uploadDirPath)
                 .toAbsolutePath().normalize();
         try {

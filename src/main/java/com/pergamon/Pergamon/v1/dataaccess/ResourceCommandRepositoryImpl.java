@@ -17,4 +17,10 @@ class ResourceCommandRepositoryImpl implements ResourceCommandRepository {
         ResourceEntity resourceEntity = resourceRepository.create(resourceCommand) ;
         return resourceMapper.mapResourceEntityToResource(resourceEntity);
     }
+
+    @Override
+    public Resource saveResource(Resource resource) {
+        ResourceEntity resourceEntity = resourceRepository.save(resource) ;
+        return resourceMapper.mapResourceEntityToResource(resourceEntity);
+    }
 }
