@@ -1,6 +1,6 @@
 package com.pergamon.Pergamon.v1.service;
 
-import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.dataaccess.FileEntity;
 import com.pergamon.Pergamon.v1.domain.FileNotFoundException;
 import com.pergamon.Pergamon.v1.domain.FileStorageException;
 import org.apache.commons.io.FilenameUtils;

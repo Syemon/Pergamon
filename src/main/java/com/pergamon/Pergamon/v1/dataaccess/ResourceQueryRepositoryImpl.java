@@ -1,12 +1,13 @@
 package com.pergamon.Pergamon.v1.dataaccess;
 
 import com.pergamon.Pergamon.v1.domain.Resource;
-import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
 import lombok.AllArgsConstructor;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 class ResourceQueryRepositoryImpl implements ResourceQueryRepository {
@@ -21,5 +22,19 @@ class ResourceQueryRepositoryImpl implements ResourceQueryRepository {
                 .flatMap(
                         entity -> Optional.ofNullable(resourceMapper.mapResourceEntityToResource(entity))
                 );
+    }
+
+    @Override
+    public List<Resource> list() {
+        return resourceRepository.list().stream()
+                .map(resourceMapper::mapResourceEntityToResource)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Resource> list(String urlFragment) {
+        return resourceRepository.list(urlFragment).stream()
+                .map(resourceMapper::mapResourceEntityToResource)
+                .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,7 @@ package com.pergamon.Pergamon.v1.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pergamon.Pergamon.v1.web.ResourceController;
-import com.pergamon.Pergamon.v1.domain.ResourceEntity;
+import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.net.MalformedURLException;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pergamon.Pergamon.PostgresTestContainerResourceTest;
 import com.pergamon.Pergamon.v1.service.Profile;
 import com.pergamon.Pergamon.v1.web.ResourceController;
-import com.pergamon.Pergamon.v1.domain.ResourceEntity;
+import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

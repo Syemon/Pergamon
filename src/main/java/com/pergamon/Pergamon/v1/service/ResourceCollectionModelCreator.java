@@ -1,8 +1,8 @@
 package com.pergamon.Pergamon.v1.service;
 
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
-import com.pergamon.Pergamon.v1.domain.FileEntity;
-import com.pergamon.Pergamon.v1.domain.ResourceEntity;
+import com.pergamon.Pergamon.v1.dataaccess.FileEntity;
+import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import org.springframework.hateoas.CollectionModel;
 
 import java.net.MalformedURLException;

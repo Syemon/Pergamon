@@ -1,5 +1,8 @@
-package com.pergamon.Pergamon.v1.domain;
+package com.pergamon.Pergamon.v1.dataaccess;
 
+import com.pergamon.Pergamon.v1.domain.FileId;
+import com.pergamon.Pergamon.v1.domain.ResourceId;
+import com.pergamon.Pergamon.v1.domain.ResourceStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;

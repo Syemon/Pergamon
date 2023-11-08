@@ -2,10 +2,10 @@ package com.pergamon.Pergamon.v1.service;
 
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
-import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.dataaccess.FileEntity;
 import com.pergamon.Pergamon.v1.domain.FileId;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
-import com.pergamon.Pergamon.v1.domain.ResourceEntity;
+import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,7 +62,7 @@ public class ResourceServiceTests {
     }
 
     @Test
-    public void testCreate_WhenCorrectData() throws Exception {
+    public void testCreate_WhenCorrectData() {
         when(fileService.storeFile(any(URL.class))).thenReturn(fileEntity);
         when(fileDao.save(fileEntity)).thenReturn(fileEntity);
 
@@ -72,7 +72,7 @@ public class ResourceServiceTests {
     }
 
     @Test
-    public void testList_WhenNoResources() throws Exception {
+    public void testList_WhenNoResources() {
         List<ResourceEntity> resources = getFilledResourceList();
         when(resourceDao.list()).thenReturn(resources);
 
@@ -80,7 +80,7 @@ public class ResourceServiceTests {
     }
 
     @Test
-    public void testList_WhenNoResourcesWithSearch() throws Exception {
+    public void testList_WhenNoResourcesWithSearch() {
         List<ResourceEntity> resources = new ArrayList<>();
         when(resourceDao.list("www")).thenReturn(resources);
 
@@ -88,7 +88,7 @@ public class ResourceServiceTests {
     }
 
     @Test
-    public void testList_WhenWithResourceWithSearch() throws Exception {
+    public void testList_WhenWithResourceWithSearch() {
         List<ResourceEntity> resources = getFilledResourceList();
         when(resourceDao.list("www")).thenReturn(resources);
 

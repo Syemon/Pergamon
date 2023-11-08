@@ -2,11 +2,11 @@ package com.pergamon.Pergamon.v1.service;
 
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
-import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.dataaccess.FileEntity;
 import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
-import com.pergamon.Pergamon.v1.domain.ResourceEntity;
+import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceCreationException;
 import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
 import lombok.AllArgsConstructor;

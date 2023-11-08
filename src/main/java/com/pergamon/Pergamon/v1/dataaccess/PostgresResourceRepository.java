@@ -1,10 +1,8 @@
 package com.pergamon.Pergamon.v1.dataaccess;
 
-import com.pergamon.Pergamon.v1.domain.FileEntity;
 import com.pergamon.Pergamon.v1.domain.FileId;
 import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
-import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceId;
 import com.pergamon.Pergamon.v1.domain.ResourceStatus;
 import org.springframework.jdbc.core.JdbcTemplate;

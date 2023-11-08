@@ -1,5 +1,6 @@
-package com.pergamon.Pergamon.v1.domain;
+package com.pergamon.Pergamon.v1.dataaccess;
 
+import com.pergamon.Pergamon.v1.domain.FileId;
 import lombok.Builder;
 import lombok.Data;
 

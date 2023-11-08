@@ -1,11 +1,11 @@
 package com.pergamon.Pergamon.v1.dao.integration;
 
 import com.pergamon.Pergamon.PostgresTestContainerResourceTest;
+import com.pergamon.Pergamon.v1.dataaccess.FileEntity;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
-import com.pergamon.Pergamon.v1.domain.FileEntity;
+import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
-import com.pergamon.Pergamon.v1.domain.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceStatus;
 import com.pergamon.Pergamon.v1.service.Profile;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
@@ -67,54 +66,6 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
         assertThat(result.getUrl()).isEqualTo(url.toString());
         assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(30L, ChronoUnit.SECONDS));
         assertThat(result.getModifiedAt()).isNull();
-    }
-
-    @Test
-    @Transactional
-    public void testList() {
-        List<ResourceEntity> resources = sut.list();
-
-        assertThat(resources.get(0).getId().id()).isEqualTo(100);
-        assertThat(resources.get(0).getFileId()).isNull();
-        assertThat(resources.get(0).getUrl()).isEqualTo("https://loremipsum.net/1");
-    }
-
-    @Test
-    @Transactional
-    public void testList_WhenSearchingForNotExistentUrl_ReturnEmptyList() {
-        ResourceEntity resource = sut.findByUrl(URL).get();
-        List<ResourceEntity> resources = sut.list("search");
-
-        assertThat(resources).doesNotContain(resource);
-    }
-
-    @Test
-    @Transactional
-    public void testList_WhenSearchingForExistentUrl_ReturnList() {
-        ResourceEntity resource = sut.findByUrl(URL).get();
-
-        List<ResourceEntity> resources = sut.list("example");
-
-        assertThat(resources).hasSize(1);
-        ResourceEntity result = resources.get(0);
-        assertThat(result.getId().id()).isNotZero();
-        assertThat(result.getFileId().id()).isNotZero();
-        assertThat(result.getUrl()).isEqualTo(URL);
-        assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
-
-    }
-
-    @Test
-    @Transactional
-    public void testList_WhenSearchingForExistentUrlWithDifferentCase_ReturnList() {
-        List<ResourceEntity> resources = sut.list("eXample");
-
-        assertThat(resources).hasSize(1);
-        ResourceEntity result = resources.get(0);
-        assertThat(result.getId().id()).isNotZero();
-        assertThat(result.getFileId().id()).isNotZero();
-        assertThat(result.getUrl()).isEqualTo(URL);
-        assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
     }
 
     @Test

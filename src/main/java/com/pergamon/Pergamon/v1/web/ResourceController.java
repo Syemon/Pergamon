@@ -2,7 +2,7 @@ package com.pergamon.Pergamon.v1.web;
 
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceConnectionException;
-import com.pergamon.Pergamon.v1.domain.ResourceEntity;
+import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceNotFoundException;
 import com.pergamon.Pergamon.v1.service.ResourceResource;
 import com.pergamon.Pergamon.v1.service.ResourceService;
