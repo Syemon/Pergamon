@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -53,8 +53,6 @@ class ResourceQueryRepositoryImplTest extends PostgresTestContainerResourceTest 
 
     @Test
     public void testList_WhenSearchingForExistentUrl_ReturnList() {
-        Resource resource = sut.findByUrl(url).get();
-
         List<Resource> resources = sut.list("example");
 
         assertThat(resources).hasSize(1);
@@ -62,7 +60,7 @@ class ResourceQueryRepositoryImplTest extends PostgresTestContainerResourceTest 
         assertThat(result.getId().id()).isNotZero();
         assertThat(result.getFileId().id()).isNotZero();
         assertThat(result.getUrl()).isEqualTo(URL_RAW);
-        assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
+        assertThat(result.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
 
     }
 
@@ -75,6 +73,6 @@ class ResourceQueryRepositoryImplTest extends PostgresTestContainerResourceTest 
         assertThat(result.getId().id()).isNotZero();
         assertThat(result.getFileId().id()).isNotZero();
         assertThat(result.getUrl()).isEqualTo(URL_RAW);
-        assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
+        assertThat(result.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
     }
 }

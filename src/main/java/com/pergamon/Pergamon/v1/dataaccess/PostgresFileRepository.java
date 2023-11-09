@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 public class PostgresFileRepository {
@@ -21,7 +22,7 @@ public class PostgresFileRepository {
     }
 
     public FileEntity save(FileEntity fileEntity) {
-        LocalDateTime createdAt = LocalDateTime.now();
+        OffsetDateTime createdAt = OffsetDateTime.now();
         String sql = "INSERT INTO file(name, storage_name, type, created_at) VALUES(?, ?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         String idColumn = "id";
@@ -30,7 +31,7 @@ public class PostgresFileRepository {
                     ps.setString(1, fileEntity.getName());
                     ps.setString(2, fileEntity.getStorageName());
                     ps.setString(3, fileEntity.getType());
-                    ps.setTimestamp(4, Timestamp.valueOf(createdAt));
+                    ps.setObject(4, createdAt);
                     return ps;
                 }
                 , keyHolder);
@@ -71,8 +72,8 @@ public class PostgresFileRepository {
                 rs.getString("name"),
                 rs.getString("storage_name"),
                 rs.getString("type"),
-                rs.getObject("created_at", LocalDateTime.class),
-                rs.getObject("updated_at", LocalDateTime.class)
+                rs.getObject("created_at", OffsetDateTime.class),
+                rs.getObject("updated_at", OffsetDateTime.class)
         );
     }
 }

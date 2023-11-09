@@ -4,7 +4,7 @@ import com.pergamon.Pergamon.v1.domain.FileId;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -17,23 +17,16 @@ public class FileEntity {
 
     private String type;
 
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 
-    public FileEntity(FileId id, String name, String storageName, String type, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public FileEntity(FileId id, String name, String storageName, String type, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.storageName = storageName;
         this.type = type;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-    public FileEntity(String name, String storageName, String type, LocalDateTime createdAt) {
-        this.name = name;
-        this.storageName = storageName;
-        this.type = type;
-        this.createdAt = createdAt;
     }
 }

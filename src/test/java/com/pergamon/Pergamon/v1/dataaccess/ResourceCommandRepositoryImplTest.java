@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class ResourceCommandRepositoryImplTest extends PostgresTestContainerReso
 
         assertThat(result.getId().id()).isNotZero();
         assertThat(result.getId()).isEqualTo(expectedResource.get().getId());
-        assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
+        assertThat(result.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
         assertThat(result.getModifiedAt()).isNull();
         assertThat(result.getUrl()).isEqualTo(URL);
         assertThat(result.getAttemptNumber()).isZero();
@@ -67,8 +68,8 @@ public class ResourceCommandRepositoryImplTest extends PostgresTestContainerReso
         Resource result = sut.saveResource(resource.get());
 
         assertThat(result.getId().id()).isEqualTo(300);
-        assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
-        assertThat(result.getModifiedAt()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
+        assertThat(result.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
+        assertThat(result.getModifiedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
         assertThat(result.getUrl()).isEqualTo("https://resourcecommandrepositorysave.com");
         assertThat(result.getAttemptNumber()).isZero();
         assertThat(result.getStatus()).isEqualTo(ResourceStatus.RETRY);

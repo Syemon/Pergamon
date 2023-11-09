@@ -64,7 +64,7 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
 
         FileEntity file = fileDao.findByUrl(url);
 
-        assertThat(file.getId()).isEqualTo(resource.getFileId());
+        assertThat(file.getId().id()).isEqualTo(resource.getFileId());
     }
 
     @Test

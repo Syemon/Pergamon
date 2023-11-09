@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,11 +61,11 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getId().id()).isNotZero();
+        assertThat(result.getId()).isNotZero();
         assertThat(result.getFileId()).isNull();
         assertThat(result.getStatus()).isEqualTo(ResourceStatus.NEW);
         assertThat(result.getUrl()).isEqualTo(url.toString());
-        assertThat(result.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(30L, ChronoUnit.SECONDS));
+        assertThat(result.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(30L, ChronoUnit.SECONDS));
         assertThat(result.getModifiedAt()).isNull();
     }
 

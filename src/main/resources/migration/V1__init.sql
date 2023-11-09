@@ -3,8 +3,8 @@ CREATE TABLE file
     id SERIAL PRIMARY KEY,
     name text,
     storage_name text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone
 );
 
 CREATE TABLE resource
@@ -14,8 +14,8 @@ CREATE TABLE resource
     name text,
     status text,
     storage_name text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone,
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone,
     CONSTRAINT fk_file
         FOREIGN KEY(file_id)
             REFERENCES file(id)

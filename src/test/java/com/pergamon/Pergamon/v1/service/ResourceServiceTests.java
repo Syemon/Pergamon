@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,10 +115,10 @@ public class ResourceServiceTests {
     private List<ResourceEntity> getFilledResourceList() {
         List<ResourceEntity> resources = new ArrayList<>();
         resources.add(new ResourceEntity()
-                .setId(new ResourceId(1))
-                .setFileId(new FileId(1))
+                .setId(1)
+                .setFileId(1)
                 .setUrl("name")
-                .setCreatedAt(LocalDateTime.now()));
+                .setCreatedAt(OffsetDateTime.now()));
 
         return resources;
     }

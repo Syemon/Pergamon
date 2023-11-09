@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 class FileService {
@@ -46,7 +47,7 @@ class FileService {
                     .name(fileName)
                     .storageName(storedFileName)
                     .type(contentType)
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(OffsetDateTime.now())
                     .build();
 
             Path targetLocation = fileStorageLocation.resolve(storedFileName);

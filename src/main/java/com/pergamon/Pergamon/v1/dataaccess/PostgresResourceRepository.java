@@ -1,9 +1,7 @@
 package com.pergamon.Pergamon.v1.dataaccess;
 
-import com.pergamon.Pergamon.v1.domain.FileId;
 import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
-import com.pergamon.Pergamon.v1.domain.ResourceId;
 import com.pergamon.Pergamon.v1.domain.ResourceStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,8 +10,7 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +22,7 @@ public class PostgresResourceRepository {
     }
 
     public ResourceEntity save(FileEntity file, URL url) {
-        LocalDateTime createdAt = LocalDateTime.now();
+        OffsetDateTime createdAt = OffsetDateTime.now();
         String sql = "INSERT INTO resource(url, file_id, created_at) VALUES(?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         String idColumn = "id";
@@ -33,7 +30,7 @@ public class PostgresResourceRepository {
                     PreparedStatement ps = con.prepareStatement(sql, new String[]{idColumn});
                     ps.setString(1, url.toString());
                     ps.setInt(2, file.getId().id());
-                    ps.setTimestamp(3, Timestamp.valueOf(createdAt));
+                    ps.setObject(3, createdAt);
                     return ps;
                 }
                 , keyHolder);
@@ -41,8 +38,8 @@ public class PostgresResourceRepository {
         int id = (int) keyHolder.getKeys().get(idColumn);
 
         return new ResourceEntity()
-                .setId(new ResourceId(id))
-                .setFileId(file.getId())
+                .setId(id)
+                .setFileId(file.getId().id())
                 .setStatus(ResourceStatus.NEW)
                 .setUrl(url.toString())
                 .setCreatedAt(createdAt);
@@ -69,18 +66,16 @@ public class PostgresResourceRepository {
     }
 
     private static ResourceEntity toResource(ResultSet rs, int rowNum) throws SQLException {
-        Integer fileIdValue = rs.getInt("file_id") == 0 ? null : rs.getInt("file_id");
-        FileId fileId = fileIdValue != null ? new FileId(fileIdValue) : null;
         return new ResourceEntity()
-                .setId(new ResourceId(rs.getInt("id")))
-                .setFileId(fileId)
+                .setId(rs.getInt("id"))
+                .setFileId(rs.getObject("file_id", Integer.class))
                 .setStatus(ResourceStatus.valueOf(rs.getString("status")))
                 .setUrl(rs.getString("url"))
-                .setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+                .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class));
     }
 
     public ResourceEntity create(ResourceCommand resourceCommand) {
-        LocalDateTime createdAt = LocalDateTime.now();
+        OffsetDateTime createdAt = OffsetDateTime.now();
         String url = resourceCommand.getUrl().toString();
         String sql = "INSERT INTO resource(url, status, created_at) VALUES(?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -89,7 +84,7 @@ public class PostgresResourceRepository {
                     PreparedStatement ps = con.prepareStatement(sql, new String[]{idColumn});
                     ps.setString(1, resourceCommand.getUrl().toString());
                     ps.setString(2, ResourceStatus.NEW.name());
-                    ps.setTimestamp(3, Timestamp.valueOf(createdAt));
+                    ps.setObject(3, createdAt);
                     return ps;
                 }
                 , keyHolder);
@@ -97,14 +92,14 @@ public class PostgresResourceRepository {
         int id = (int) keyHolder.getKeys().get(idColumn);
 
         return new ResourceEntity()
-                .setId(new ResourceId(id))
+                .setId(id)
                 .setStatus(ResourceStatus.NEW)
                 .setUrl(url)
                 .setCreatedAt(createdAt);
     }
 
     public ResourceEntity save(Resource resource) {
-        LocalDateTime modifiedAt = LocalDateTime.now();
+        OffsetDateTime modifiedAt = OffsetDateTime.now();
         Integer fileId = resource.getFileId() != null ? resource.getFileId().id() : null;
         String sql = """
             UPDATE
@@ -114,7 +109,7 @@ public class PostgresResourceRepository {
                 url=?, 
                 updated_at=?, 
                 status=?, 
-                attemptnumber=?
+                attempt_number=?
             WHERE
                 id = ?
                 """;
@@ -123,7 +118,7 @@ public class PostgresResourceRepository {
                     PreparedStatement ps = con.prepareStatement(sql, new String[]{idColumn});
                     ps.setObject(1, fileId);
                     ps.setString(2, resource.getUrl());
-                    ps.setTimestamp(3, Timestamp.valueOf(modifiedAt));
+                    ps.setObject(3, modifiedAt);
                     ps.setString(4, resource.getUrl());
                     ps.setInt(5, resource.getAttemptNumber());
                     ps.setInt(6, resource.getId().id());
@@ -132,12 +127,12 @@ public class PostgresResourceRepository {
 
         resource.setModifiedAt(modifiedAt);
         return new ResourceEntity()
-                .setId(resource.getId())
+                .setId(resource.getId().id())
                 .setStatus(resource.getStatus())
                 .setUrl(resource.getUrl())
                 .setCreatedAt(resource.getCreatedAt())
                 .setModifiedAt(resource.getModifiedAt())
-                .setFileId(resource.getFileId())
+                .setFileId(fileId)
                 .setAttemptNumber(resource.getAttemptNumber());
     }
 }

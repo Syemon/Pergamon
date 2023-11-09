@@ -3,6 +3,7 @@ package com.pergamon.Pergamon.v1.service;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.FileEntity;
 import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
+import com.pergamon.Pergamon.v1.domain.FileId;
 import org.springframework.hateoas.CollectionModel;
 
 import java.net.MalformedURLException;
@@ -22,7 +23,7 @@ class ResourceCollectionModelCreator {
 
         for (ResourceEntity resource : resources) {
             ResourceBody body = new ResourceBody();
-            FileEntity file = postgresFileRepository.findById(resource.getFileId()).get();
+            FileEntity file = postgresFileRepository.findById(new FileId(resource.getFileId())).get();
 
             body.setUrl(resource.getUrl())
                 .setFileName(file.getName())

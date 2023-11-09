@@ -2,7 +2,7 @@ package com.pergamon.Pergamon.v1.domain;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 public class Resource {
@@ -10,8 +10,8 @@ public class Resource {
     private ResourceId id;
     private FileId fileId;
     private String url;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime modifiedAt;
     private ResourceStatus status;
     private int attemptNumber;
 }
