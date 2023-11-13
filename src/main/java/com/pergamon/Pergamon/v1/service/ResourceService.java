@@ -4,6 +4,7 @@ import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
+import com.pergamon.Pergamon.v1.domain.ContentCommand;
 import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
@@ -49,6 +50,7 @@ public class ResourceService {
     public void create(Resource resource) {
         URL url = resource.getUrl();
         Optional<ValidationError> error = contentService.validateInitialContent(url);
+        ContentCommand contentCommand = contentService.createContentCommand(url);
         if (error.isPresent()) {
             log.error("Resource content failed initial validation: {}", error.get().getFailureMessages());
             resource.setStatus(ResourceStatus.FAILED);

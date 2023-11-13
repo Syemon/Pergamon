@@ -1,5 +1,6 @@
 package com.pergamon.Pergamon.v1.domain;
 
+import com.pergamon.Pergamon.v1.service.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

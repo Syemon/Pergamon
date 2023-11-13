@@ -1,6 +1,8 @@
 package com.pergamon.Pergamon.v1.service;
 
 import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
+import com.pergamon.Pergamon.v1.domain.ContentCommand;
+import com.pergamon.Pergamon.v1.domain.ContentDomainException;
 import com.pergamon.Pergamon.v1.domain.FileNotFoundException;
 import com.pergamon.Pergamon.v1.domain.FileStorageException;
 import lombok.extern.slf4j.Slf4j;
@@ -52,9 +54,26 @@ class ContentService {
                         .build()
         );
     }
-    public ContentEntity storeFile(URL url) {
+
+    public ContentCommand createContentCommand(URL url) {
         String storedFileName = UUID.randomUUID().toString();
 
+        String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
+        String contentType = null;
+        try {
+            contentType = url.openConnection().getContentType();
+        } catch (IOException e) {
+            log.error("Could not extract contentType from url", e);
+            throw new ContentDomainException("Problem while saving content");
+        }
+        return ContentCommand.builder()
+                .name(fileName)
+                .storageName(storedFileName)
+                .type(contentType)
+                .build();
+    }
+    public ContentEntity storeFile(URL url) {
+        String storedFileName = UUID.randomUUID().toString();
 
         String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
         try {

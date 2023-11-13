@@ -4,6 +4,7 @@ import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceConnectionException;
 import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceNotFoundException;
+import com.pergamon.Pergamon.v1.service.ApiResponse;
 import com.pergamon.Pergamon.v1.service.ResourceResource;
 import com.pergamon.Pergamon.v1.service.ResourceService;
 import jakarta.validation.Valid;
@@ -35,7 +36,7 @@ public class ResourceController {
     }
 
     @PutMapping(value = "/resources")
-    public ResponseEntity<Void> upsert(@Valid @RequestBody ResourceCommand resourceCommand) throws IOException {
+    public ResponseEntity<ApiResponse> upsert(@Valid @RequestBody ResourceCommand resourceCommand) throws IOException {
         try {
             resourceCommand.getUrl().openConnection().connect();
         } catch (IOException exc) {

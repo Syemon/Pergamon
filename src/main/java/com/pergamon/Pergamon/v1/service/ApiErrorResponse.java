@@ -1,6 +1,6 @@
-package com.pergamon.Pergamon.v1.domain;
+package com.pergamon.Pergamon.v1.service;
 
-public class ApiErrorResponse {
+public class ApiErrorResponse implements ApiResponse{
     private int status;
     private String message;
     private long timestamp;
