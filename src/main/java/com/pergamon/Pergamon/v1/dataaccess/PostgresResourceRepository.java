@@ -21,9 +21,9 @@ public class PostgresResourceRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ResourceEntity save(FileEntity file, URL url) {
+    public ResourceEntity save(ContentEntity file, URL url) {
         OffsetDateTime createdAt = OffsetDateTime.now();
-        String sql = "INSERT INTO resource(url, file_id, created_at) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO resource(url, content_id, created_at) VALUES(?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         String idColumn = "id";
         jdbcTemplate.update(con -> {
@@ -68,7 +68,7 @@ public class PostgresResourceRepository {
     private static ResourceEntity toResource(ResultSet rs, int rowNum) throws SQLException {
         return new ResourceEntity()
                 .setId(rs.getInt("id"))
-                .setFileId(rs.getObject("file_id", Integer.class))
+                .setFileId(rs.getObject("content_id", Integer.class))
                 .setStatus(ResourceStatus.valueOf(rs.getString("status")))
                 .setUrl(rs.getString("url"))
                 .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class));
@@ -100,12 +100,12 @@ public class PostgresResourceRepository {
 
     public ResourceEntity save(Resource resource) {
         OffsetDateTime modifiedAt = OffsetDateTime.now();
-        Integer fileId = resource.getFileId() != null ? resource.getFileId().id() : null;
+        Integer fileId = resource.getContentId() != null ? resource.getContentId().id() : null;
         String sql = """
             UPDATE
                 resource
             SET
-                file_id=?,
+                content_id=?,
                 url=?, 
                 updated_at=?, 
                 status=?, 
@@ -117,9 +117,9 @@ public class PostgresResourceRepository {
         jdbcTemplate.update(con -> {
                     PreparedStatement ps = con.prepareStatement(sql, new String[]{idColumn});
                     ps.setObject(1, fileId);
-                    ps.setString(2, resource.getUrl());
+                    ps.setString(2, resource.getUrl().toString());
                     ps.setObject(3, modifiedAt);
-                    ps.setString(4, resource.getUrl());
+                    ps.setString(4, resource.getUrl().toString());
                     ps.setInt(5, resource.getAttemptNumber());
                     ps.setInt(6, resource.getId().id());
                     return ps;
@@ -129,7 +129,7 @@ public class PostgresResourceRepository {
         return new ResourceEntity()
                 .setId(resource.getId().id())
                 .setStatus(resource.getStatus())
-                .setUrl(resource.getUrl())
+                .setUrl(resource.getUrl().toString())
                 .setCreatedAt(resource.getCreatedAt())
                 .setModifiedAt(resource.getModifiedAt())
                 .setFileId(fileId)

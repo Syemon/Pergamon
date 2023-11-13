@@ -1,8 +1,9 @@
 package com.pergamon.Pergamon.v1.service;
 
-import com.pergamon.Pergamon.v1.dataaccess.FileEntity;
+import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.domain.FileNotFoundException;
 import com.pergamon.Pergamon.v1.domain.FileStorageException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -15,14 +16,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-class FileService {
+@Slf4j
+class ContentService {
     private final Path fileStorageLocation;
 
-    public FileService(String uploadDirPath) {
+    public ContentService(String uploadDirPath) {
         fileStorageLocation = Paths.get(uploadDirPath)
                 .toAbsolutePath().normalize();
         try {
@@ -32,18 +36,31 @@ class FileService {
         }
     }
 
-    public FileEntity storeFile(URL url) {
+    public Optional<ValidationError> validateInitialContent(URL url) {
+        String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
+        List<String> failureMessages = new ArrayList<>();
+        if(fileName.contains("..")) {
+            log.error("Filename contains invalid path sequence '{}", fileName);
+            failureMessages.add("Filename contains invalid path sequence");
+        }
+        if (failureMessages.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(
+                ValidationError.builder()
+                        .failureMessages(failureMessages)
+                        .build()
+        );
+    }
+    public ContentEntity storeFile(URL url) {
         String storedFileName = UUID.randomUUID().toString();
 
 
         String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
-        if(fileName.contains("..")) {
-            throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
-        }
         try {
             String contentType = url.openConnection().getContentType();
 
-            FileEntity fileEntity = FileEntity.builder()
+            ContentEntity contentEntity = ContentEntity.builder()
                     .name(fileName)
                     .storageName(storedFileName)
                     .type(contentType)
@@ -53,13 +70,13 @@ class FileService {
             Path targetLocation = fileStorageLocation.resolve(storedFileName);
             Files.copy(url.openStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return fileEntity;
+            return contentEntity;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
 
-    public FileEntity updateFile(URL url, FileEntity file) throws IOException {
+    public ContentEntity updateFile(URL url, ContentEntity file) throws IOException {
         Path targetLocation = fileStorageLocation.resolve(file.getStorageName());
         String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
 

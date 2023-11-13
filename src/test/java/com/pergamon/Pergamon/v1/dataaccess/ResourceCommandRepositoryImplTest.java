@@ -13,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
@@ -52,10 +51,10 @@ public class ResourceCommandRepositoryImplTest extends PostgresTestContainerReso
         assertThat(result.getId()).isEqualTo(expectedResource.get().getId());
         assertThat(result.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
         assertThat(result.getModifiedAt()).isNull();
-        assertThat(result.getUrl()).isEqualTo(URL);
+        assertThat(result.getUrl().toString()).isEqualTo(URL);
         assertThat(result.getAttemptNumber()).isZero();
         assertThat(result.getStatus()).isEqualTo(ResourceStatus.NEW);
-        assertThat(result.getFileId()).isNull();
+        assertThat(result.getContentId()).isNull();
     }
 
     @Test
@@ -70,9 +69,9 @@ public class ResourceCommandRepositoryImplTest extends PostgresTestContainerReso
         assertThat(result.getId().id()).isEqualTo(300);
         assertThat(result.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
         assertThat(result.getModifiedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
-        assertThat(result.getUrl()).isEqualTo("https://resourcecommandrepositorysave.com");
+        assertThat(result.getUrl().toString()).isEqualTo("https://resourcecommandrepositorysave.com");
         assertThat(result.getAttemptNumber()).isZero();
         assertThat(result.getStatus()).isEqualTo(ResourceStatus.RETRY);
-        assertThat(result.getFileId()).isNull();
+        assertThat(result.getContentId()).isNull();
     }
 }

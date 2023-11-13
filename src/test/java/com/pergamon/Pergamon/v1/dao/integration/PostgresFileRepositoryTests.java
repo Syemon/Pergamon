@@ -4,7 +4,7 @@ import com.pergamon.Pergamon.PergamonApplication;
 import com.pergamon.Pergamon.PostgresTestContainerResourceTest;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
-import com.pergamon.Pergamon.v1.dataaccess.FileEntity;
+import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.service.Profile;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = PergamonApplication.class)
 @ActiveProfiles(value = Profile.TEST_FLYWAY)
 public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTest {
-    private FileEntity fileEntity;
+    private ContentEntity contentEntity;
 
     @Autowired
     private PostgresFileRepository fileDao;
@@ -32,20 +32,20 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
 
     @BeforeEach
     public void setUp() {
-        fileEntity = FileEntity.builder().build();
+        contentEntity = ContentEntity.builder().build();
     }
 
     @Test
     @Transactional
     public void testCreate_WhenCorrectData_ReturnFile() {
-        fileEntity = FileEntity.builder()
+        contentEntity = ContentEntity.builder()
                 .name("test.txt")
                 .storageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
                 .type("plain/text")
                 .build();
 
 
-        FileEntity file = fileDao.save(fileEntity);
+        ContentEntity file = fileDao.save(contentEntity);
 
         assertThat(file.getName()).isEqualTo("test.txt");
         assertThat(file.getStorageName()).isEqualTo("8d4073ce-17d5-43e1-90a0-62e94fba1402");
@@ -62,7 +62,7 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
         ResourceEntity resource = postgresResourceRepository.findByUrl(url.toString()).get();
 
 
-        FileEntity file = fileDao.findByUrl(url);
+        ContentEntity file = fileDao.findByUrl(url);
 
         assertThat(file.getId().id()).isEqualTo(resource.getFileId());
     }
@@ -70,7 +70,7 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
     @Test
     @Transactional
     public void testUpdate() { //FIXME: It can end up as a false positive
-        FileEntity file = getFile();
+        ContentEntity file = getFile();
 
         file.setName("new_name");
         file.setStorageName("lorem ipsum");
@@ -84,8 +84,8 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
     }
 
     @Transactional
-    public FileEntity getFile() {
-        FileEntity file = FileEntity.builder()
+    public ContentEntity getFile() {
+        ContentEntity file = ContentEntity.builder()
                 .name("test.txt")
                 .storageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
                 .type("plain/text")

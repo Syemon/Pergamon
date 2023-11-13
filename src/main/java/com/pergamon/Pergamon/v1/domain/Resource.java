@@ -2,14 +2,15 @@ package com.pergamon.Pergamon.v1.domain;
 
 import lombok.Data;
 
+import java.net.URL;
 import java.time.OffsetDateTime;
 
 @Data
 public class Resource {
 
     private ResourceId id;
-    private FileId fileId;
-    private String url;
+    private ContentId contentId;
+    private URL url;
     private OffsetDateTime createdAt;
     private OffsetDateTime modifiedAt;
     private ResourceStatus status;

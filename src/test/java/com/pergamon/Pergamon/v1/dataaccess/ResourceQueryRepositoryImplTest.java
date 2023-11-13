@@ -39,8 +39,8 @@ class ResourceQueryRepositoryImplTest extends PostgresTestContainerResourceTest 
         List<Resource> resources = sut.list();
 
         assertThat(resources.get(0).getId().id()).isEqualTo(100);
-        assertThat(resources.get(0).getFileId()).isNull();
-        assertThat(resources.get(0).getUrl()).isEqualTo("https://loremipsum.net/1");
+        assertThat(resources.get(0).getContentId()).isNull();
+        assertThat(resources.get(0).getUrl().toString()).isEqualTo("https://loremipsum.net/1");
     }
 
     @Test
@@ -58,8 +58,8 @@ class ResourceQueryRepositoryImplTest extends PostgresTestContainerResourceTest 
         assertThat(resources).hasSize(1);
         Resource result = resources.get(0);
         assertThat(result.getId().id()).isNotZero();
-        assertThat(result.getFileId().id()).isNotZero();
-        assertThat(result.getUrl()).isEqualTo(URL_RAW);
+        assertThat(result.getContentId().id()).isNotZero();
+        assertThat(result.getUrl()).isEqualTo(url);
         assertThat(result.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
 
     }
@@ -71,8 +71,8 @@ class ResourceQueryRepositoryImplTest extends PostgresTestContainerResourceTest 
         assertThat(resources).hasSize(1);
         Resource result = resources.get(0);
         assertThat(result.getId().id()).isNotZero();
-        assertThat(result.getFileId().id()).isNotZero();
-        assertThat(result.getUrl()).isEqualTo(URL_RAW);
+        assertThat(result.getContentId().id()).isNotZero();
+        assertThat(result.getUrl()).isEqualTo(url);
         assertThat(result.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
     }
 }

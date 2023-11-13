@@ -1,7 +1,7 @@
 package com.pergamon.Pergamon.v1.dao.integration;
 
 import com.pergamon.Pergamon.PostgresTestContainerResourceTest;
-import com.pergamon.Pergamon.v1.dataaccess.FileEntity;
+import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -82,8 +81,8 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
     }
 
     @Transactional
-    public FileEntity getFile() {
-        FileEntity file = FileEntity.builder()
+    public ContentEntity getFile() {
+        ContentEntity file = ContentEntity.builder()
                 .name("test.txt")
                 .storageName("8d4073ce-17d5-43e1-90a0-62e94fba1402")
                 .type("plain/text")

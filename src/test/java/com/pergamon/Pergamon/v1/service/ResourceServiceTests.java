@@ -1,12 +1,11 @@
 package com.pergamon.Pergamon.v1.service;
 
+import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
-import com.pergamon.Pergamon.v1.dataaccess.FileEntity;
-import com.pergamon.Pergamon.v1.domain.FileId;
-import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
-import com.pergamon.Pergamon.v1.domain.ResourceId;
+import com.pergamon.Pergamon.v1.domain.Resource;
+import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ResourceServiceTests {
-    private FileEntity fileEntity;
+    public static final String CONTENT_TYPE = "plain/text";
+    public static final String FILE_NAME = "file.txt";
+    private ContentEntity contentEntity;
     private ResourceCommand resourceCommand;
 
     @InjectMocks
@@ -42,7 +42,7 @@ public class ResourceServiceTests {
     private org.springframework.core.io.Resource fileResource;
 
     @Mock
-    private FileService fileService;
+    private ContentService contentService;
 
     @Mock
     private PostgresFileRepository fileDao;
@@ -55,21 +55,26 @@ public class ResourceServiceTests {
 
     @BeforeEach
     public void setUp() {
-        fileEntity = FileEntity.builder().build();
-        fileEntity.setType("plain/text");
-        fileEntity.setName("file.txt");
+        contentEntity = ContentEntity.builder().build();
+        contentEntity.setType(CONTENT_TYPE);
+        contentEntity.setName(FILE_NAME);
 
         resourceCommand = new ResourceCommand().setUrl(url);
     }
 
     @Test
     public void testCreate_WhenCorrectData() {
-        when(fileService.storeFile(any(URL.class))).thenReturn(fileEntity);
-        when(fileDao.save(fileEntity)).thenReturn(fileEntity);
+        // given
+        when(contentService.storeFile(any(URL.class))).thenReturn(contentEntity);
+        when(fileDao.save(contentEntity)).thenReturn(contentEntity);
 
-        sut.create(resourceCommand);
+        Resource resource = new Resource().setUrl(url);
 
-        verify(resourceDao, times(1)).save(fileEntity, url);
+        // when
+        sut.create(resource);
+
+        // then
+        verify(resourceDao, times(1)).save(contentEntity, url);
     }
 
     @Test
@@ -98,18 +103,18 @@ public class ResourceServiceTests {
 
     @Test
     public void testDownload() {
-        when(fileDao.findByUrl(any(URL.class))).thenReturn(fileEntity);
+        when(fileDao.findByUrl(any(URL.class))).thenReturn(contentEntity);
 
         sut.download(url);
     }
 
     @Test
     public void testUpdate_WhenCorrectData() throws Exception {
-        when(fileDao.findByUrl(url)).thenReturn(fileEntity);
+        when(fileDao.findByUrl(url)).thenReturn(contentEntity);
 
         sut.update(url);
 
-        verify(fileService, atLeastOnce()).updateFile(url, fileEntity);
+        verify(contentService, atLeastOnce()).updateFile(url, contentEntity);
     }
 
     private List<ResourceEntity> getFilledResourceList() {
