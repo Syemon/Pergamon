@@ -1,5 +1,6 @@
 package com.pergamon.Pergamon.v1.dataaccess;
 
+import com.pergamon.Pergamon.v1.domain.ContentCommand;
 import com.pergamon.Pergamon.v1.domain.ContentId;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -73,5 +74,31 @@ public class PostgresFileRepository {
                 rs.getObject("created_at", OffsetDateTime.class),
                 rs.getObject("updated_at", OffsetDateTime.class)
         );
+    }
+
+    public ContentEntity create(ContentCommand contentCommand) {
+        OffsetDateTime createdAt = OffsetDateTime.now();
+        String sql = "INSERT INTO content(name, storage_name, type, created_at) VALUES(?, ?, ?, ?)";
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        String idColumn = "id";
+        jdbcTemplate.update(con -> {
+                    PreparedStatement ps = con.prepareStatement(sql, new String[]{idColumn});
+                    ps.setString(1, contentCommand.getName());
+                    ps.setString(2, contentCommand.getStorageName());
+                    ps.setString(3, contentCommand.getType());
+                    ps.setObject(4, createdAt);
+                    return ps;
+                }
+                , keyHolder);
+
+        int id = (int) keyHolder.getKeys().get(idColumn);
+
+        return ContentEntity.builder()
+                .id(new ContentId(id))
+                .name(contentCommand.getName())
+                .storageName(contentCommand.getStorageName())
+                .type(contentCommand.getType())
+                .createdAt(createdAt)
+                .build();
     }
 }

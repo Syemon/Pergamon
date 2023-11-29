@@ -1,5 +1,6 @@
 package com.pergamon.Pergamon.v1.dataaccess;
 
+import com.pergamon.Pergamon.v1.domain.ContentCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
 import org.springframework.context.annotation.Bean;
@@ -31,5 +32,15 @@ public class DataAccessConfiguration {
     @Bean
     public ResourceQueryRepository resourceQueryRepository(PostgresResourceRepository postgresResourceRepository, ResourceMapper resourceMapper) {
         return new ResourceQueryRepositoryImpl(postgresResourceRepository, resourceMapper);
+    }
+
+    @Bean
+    public ContentMapper contentMapper() {
+        return new ContentMapper();
+    }
+
+    @Bean
+    public ContentCommandRepository contentCommandRepository(PostgresFileRepository postgresFileRepository, ContentMapper contentMapper) {
+        return new ContentCommandRepositoryImpl(postgresFileRepository, contentMapper);
     }
 }
