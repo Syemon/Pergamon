@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 public class PostgresFileRepository {
@@ -38,7 +39,7 @@ public class PostgresFileRepository {
         int id = (int) keyHolder.getKeys().get(idColumn);
 
         return contentEntity.setCreatedAt(createdAt)
-                .setId(new ContentId(id));
+                .setId(id);
     }
 
     public void update(ContentEntity file) {
@@ -67,7 +68,7 @@ public class PostgresFileRepository {
 
     private static ContentEntity toFile(ResultSet rs, int rowNum) throws SQLException {
         return new ContentEntity(
-                new ContentId(rs.getInt("id")),
+                rs.getInt("id"),
                 rs.getString("name"),
                 rs.getString("storage_name"),
                 rs.getString("type"),
@@ -91,10 +92,10 @@ public class PostgresFileRepository {
                 }
                 , keyHolder);
 
-        int id = (int) keyHolder.getKeys().get(idColumn);
+        int id = (int) Objects.requireNonNull(keyHolder.getKeys()).get(idColumn);
 
         return ContentEntity.builder()
-                .id(new ContentId(id))
+                .id(id)
                 .name(contentCommand.getName())
                 .storageName(contentCommand.getStorageName())
                 .type(contentCommand.getType())

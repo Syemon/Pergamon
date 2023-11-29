@@ -29,7 +29,7 @@ public class PostgresResourceRepository {
         jdbcTemplate.update(con -> {
                     PreparedStatement ps = con.prepareStatement(sql, new String[]{idColumn});
                     ps.setString(1, url.toString());
-                    ps.setInt(2, file.getId().id());
+                    ps.setInt(2, file.getId());
                     ps.setObject(3, createdAt);
                     return ps;
                 }
@@ -39,7 +39,7 @@ public class PostgresResourceRepository {
 
         return new ResourceEntity()
                 .setId(id)
-                .setFileId(file.getId().id())
+                .setFileId(file.getId())
                 .setStatus(ResourceStatus.NEW)
                 .setUrl(url.toString())
                 .setCreatedAt(createdAt);
