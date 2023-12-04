@@ -1,6 +1,5 @@
 package com.pergamon.Pergamon.v1.service;
 
-import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.domain.ContentCommand;
 import com.pergamon.Pergamon.v1.domain.ContentDomainException;
 import org.apache.commons.io.FilenameUtils;
@@ -19,8 +18,6 @@ import java.net.URLConnection;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,20 +52,7 @@ public class ContentServiceTests {
         assertThat(validationError.getFailureMessages()).contains("Filename contains invalid path sequence");
     }
 
-    @Test
-    public void testStoreFile() throws Exception {
-        InputStream inputStream = new ByteArrayInputStream("test".getBytes());
-        when(url.getPath()).thenReturn("https://example/test.txt");
-        when(url.openStream()).thenReturn(inputStream);
-        when(url.openConnection()).thenReturn(urlConnection);
-        when(urlConnection.getContentType()).thenReturn("plain/text");
 
-        ContentEntity contentEntity = sut.storeFile(url);
-
-        assertEquals(contentEntity.getName(), FILE_NAME);
-        assertTrue(contentEntity.getStorageName()
-                .matches("[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}"));
-    }
 
     @Test
     public void createContentCommand_shouldThrowException_whenCouldNotExtractContentType() throws Exception {

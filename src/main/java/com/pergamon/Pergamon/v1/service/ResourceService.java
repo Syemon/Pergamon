@@ -4,7 +4,9 @@ import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
+import com.pergamon.Pergamon.v1.domain.Content;
 import com.pergamon.Pergamon.v1.domain.ContentCommand;
+import com.pergamon.Pergamon.v1.domain.ContentCommandRepository;
 import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
@@ -13,6 +15,7 @@ import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -34,6 +37,9 @@ public class ResourceService {
     private final ResourceCollectionModelCreator resourceCollectionModelCreator;
     private final ResourceCommandRepository resourceCommandRepository;
     private final ResourceQueryRepository resourceQueryRepository;
+    private final ContentCommandRepository contentCommandRepository;
+    private final ApplicationEventMulticaster applicationEventMulticaster;
+    private final EventMapper eventMapper;
 
     public void upsert(ResourceCommand resourceCommand) throws IOException {
         log.info("Trying to upsert resource from url '{}'", resourceCommand.getUrl());
@@ -50,12 +56,18 @@ public class ResourceService {
     public void create(Resource resource) {
         URL url = resource.getUrl();
         Optional<ValidationError> error = contentService.validateInitialContent(url);
-        ContentCommand contentCommand = contentService.createContentCommand(url);
         if (error.isPresent()) {
             log.error("Resource content failed initial validation: {}", error.get().getFailureMessages());
             resource.setStatus(ResourceStatus.FAILED);
+            resourceCommandRepository.saveResource(resource);
+            return; //TODO: Exc to create resp for agent
         }
+        ContentCommand contentCommand = contentService.createContentCommand(url);
+        Content content = contentCommandRepository.createContent(contentCommand);
 
+        applicationEventMulticaster.multicastEvent(
+                eventMapper.mapResourceAndContentToStoreResourceEvent(resource, content)
+        );
         ContentEntity contentEntity = contentService.storeFile(url);
 
         try {
@@ -63,6 +75,7 @@ public class ResourceService {
             resourceDao.save(file, url);
         } catch (Exception exc) {
             throw new ResourceCreationException("There was an error during resource creation", exc);
+            //TODO: resource ERROR status
         }
     }
 
