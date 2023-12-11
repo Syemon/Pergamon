@@ -4,7 +4,9 @@ import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
+import com.pergamon.Pergamon.v1.domain.Content;
 import com.pergamon.Pergamon.v1.domain.ContentCommandRepository;
+import com.pergamon.Pergamon.v1.domain.ContentId;
 import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceStatus;
@@ -26,7 +28,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -81,8 +82,8 @@ public class ResourceServiceTests {
     @Test
     public void testCreate_WhenCorrectData() {
         // given
-        when(contentService.storeFile(any(URL.class))).thenReturn(contentEntity);
-        when(fileDao.save(contentEntity)).thenReturn(contentEntity);
+        when(contentCommandRepository.createContent(any())).thenReturn(
+                Content.builder().id(new ContentId(1)).build());
 
         Resource resource = new Resource().setUrl(url);
 
@@ -90,7 +91,7 @@ public class ResourceServiceTests {
         sut.create(resource);
 
         // then
-        verify(resourceDao, times(1)).save(contentEntity, url);
+        verify(resourceCommandRepository, times(1)).saveResource(resource);
         verify(applicationEventMulticaster).multicastEvent(any(StoreResourceEvent.class));
     }
 
@@ -111,22 +112,6 @@ public class ResourceServiceTests {
         verifyNoInteractions(applicationEventMulticaster);
 
         assertThat(resource.getStatus()).isEqualTo(ResourceStatus.FAILED);
-    }
-
-    @Test
-    public void create_shouldPersistContent() {
-        // given
-        when(contentService.storeFile(any(URL.class))).thenReturn(contentEntity);
-        when(fileDao.save(contentEntity)).thenReturn(contentEntity);
-
-        Resource resource = new Resource().setUrl(url);
-
-        // when
-        sut.create(resource);
-
-        // then
-        verify(applicationEventMulticaster).multicastEvent(any(StoreResourceEvent.class));
-        verify(resourceDao, times(1)).save(contentEntity, url);
     }
 
     @Test
@@ -158,15 +143,6 @@ public class ResourceServiceTests {
         when(fileDao.findByUrl(any(URL.class))).thenReturn(contentEntity);
 
         sut.download(url);
-    }
-
-    @Test
-    public void testUpdate_WhenCorrectData() throws Exception {
-        when(fileDao.findByUrl(url)).thenReturn(contentEntity);
-
-        sut.update(url);
-
-        verify(contentService, atLeastOnce()).updateFile(url, contentEntity);
     }
 
     private List<ResourceEntity> getFilledResourceList() {

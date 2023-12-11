@@ -10,7 +10,6 @@ import com.pergamon.Pergamon.v1.domain.ContentCommandRepository;
 import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
-import com.pergamon.Pergamon.v1.domain.ResourceCreationException;
 import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceStatus;
 import lombok.AllArgsConstructor;
@@ -46,7 +45,8 @@ public class ResourceService {
         Optional<Resource> resourceOptional = resourceQueryRepository.findByUrl(resourceCommand.getUrl());
         if (resourceOptional.isPresent()) {
             log.info("Resource already exists. Resource id={}. Updating file", resourceOptional.get().getId().id());
-            update(resourceCommand.getUrl()); // TODO change to send whole command
+            return;
+//            update(resourceCommand.getUrl()); // TODO change to send whole command
         }
         log.info("Persisting new resource and trying to download content");
         Resource resource = resourceCommandRepository.createResource(resourceCommand);
@@ -64,28 +64,22 @@ public class ResourceService {
         }
         ContentCommand contentCommand = contentService.createContentCommand(url);
         Content content = contentCommandRepository.createContent(contentCommand);
-
+        log.info("Created content: {}", content);
+        resource.setContentId(content.getId());
+        resourceCommandRepository.saveResource(resource);
+        log.info("Sending StoreResourceEvent");
         applicationEventMulticaster.multicastEvent(
                 eventMapper.mapResourceAndContentToStoreResourceEvent(resource, content)
         );
-        ContentEntity contentEntity = contentService.storeFile(url);
-
-        try {
-            ContentEntity file = fileDao.save(contentEntity);
-            resourceDao.save(file, url);
-        } catch (Exception exc) {
-            throw new ResourceCreationException("There was an error during resource creation", exc);
-            //TODO: resource ERROR status
-        }
     }
 
-    @Transactional
-    public void update(URL url) throws IOException {
-        ContentEntity file = fileDao.findByUrl(url);
-        ContentEntity updateFile = contentService.updateFile(url, file);
-
-        fileDao.update(updateFile);
-    }
+//    @Transactional
+//    public void update(URL url) throws IOException {
+//        ContentEntity file = fileDao.findByUrl(url);
+//        ContentEntity updateFile = contentService.updateFile(url, file);
+//
+//        fileDao.update(updateFile);
+//    }
 
     @Transactional
     public boolean exists(URL url) {

@@ -2,7 +2,6 @@ package com.pergamon.Pergamon.v1.dataaccess;
 
 import com.pergamon.Pergamon.v1.domain.ContentCommand;
 import com.pergamon.Pergamon.v1.domain.ContentId;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
@@ -58,12 +57,10 @@ public class PostgresFileRepository {
     }
 
     public Optional<ContentEntity> findById(ContentId id) {
-        try {
-            ContentEntity result = jdbcTemplate.queryForObject("SELECT * FROM content f WHERE f.id = ?", PostgresFileRepository::toFile, id.id());
-            return Optional.ofNullable(result);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+            return jdbcTemplate.query(
+                    "SELECT * FROM content f WHERE f.id = ?",
+                    PostgresFileRepository::toFile,
+                    id.id()).stream().findFirst();
     }
 
     private static ContentEntity toFile(ResultSet rs, int rowNum) throws SQLException {

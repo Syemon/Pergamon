@@ -5,6 +5,7 @@ import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.domain.ContentCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
+import com.pergamon.Pergamon.v1.domain.StorageRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ApplicationEventMulticaster;
@@ -55,5 +56,13 @@ public class ServiceConfiguration {
 
         eventMulticaster.setTaskExecutor(new SimpleAsyncTaskExecutor());
         return eventMulticaster;
+    }
+
+    @Bean
+    public StoreResourceListener storeResourceListener(
+            StorageRepository storageRepository,
+            ResourceCommandRepository resourceCommandRepository
+    ) {
+        return new StoreResourceListener(storageRepository, resourceCommandRepository);
     }
 }

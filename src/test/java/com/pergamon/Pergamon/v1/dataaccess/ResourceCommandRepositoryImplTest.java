@@ -73,5 +73,17 @@ public class ResourceCommandRepositoryImplTest extends PostgresTestContainerReso
         assertThat(result.getAttemptNumber()).isZero();
         assertThat(result.getStatus()).isEqualTo(ResourceStatus.RETRY);
         assertThat(result.getContentId()).isNull();
+
+        Optional<Resource> optionalResource = resourceQueryRepository.findByUrl(new URL("https://resourcecommandrepositorysave.com"));
+
+        assertThat(optionalResource).isPresent();
+        Resource resourceQueryCheck = optionalResource.get();
+        assertThat(resourceQueryCheck.getId().id()).isEqualTo(300);
+        assertThat(resourceQueryCheck.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
+        assertThat(resourceQueryCheck.getModifiedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.MINUTES));
+        assertThat(resourceQueryCheck.getUrl().toString()).isEqualTo("https://resourcecommandrepositorysave.com");
+        assertThat(resourceQueryCheck.getAttemptNumber()).isZero();
+        assertThat(resourceQueryCheck.getStatus()).isEqualTo(ResourceStatus.RETRY);
+        assertThat(resourceQueryCheck.getContentId()).isNull();
     }
 }

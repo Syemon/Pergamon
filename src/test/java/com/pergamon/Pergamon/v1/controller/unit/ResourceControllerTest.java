@@ -2,27 +2,22 @@ package com.pergamon.Pergamon.v1.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pergamon.Pergamon.PostgresTestContainerResourceTest;
+import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.service.Profile;
 import com.pergamon.Pergamon.v1.web.ResourceController;
-import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
-import com.pergamon.Pergamon.v1.service.ResourceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -40,12 +35,12 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private ResourceService resourceService;
+//    @MockBean
+//    private ResourceService resourceService;
 
     @Test
     public void testUpsert_WhenCorrectUrl() throws Exception {
-        body.put("url", "https://example.com");
+        body.put("url", "https://wikipedia.com");
         String jsonBody = mapper.writeValueAsString(body);
 
         mockMvc.perform(put(
@@ -90,7 +85,7 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
     public void testList_WhenSuccess() throws Exception {
         List<ResourceEntity> resources = new ArrayList<>();
 
-        when(resourceService.list()).thenReturn(resources);
+//        when(resourceService.list()).thenReturn(resources);
 
         mockMvc.perform(get("/api/v1/resources"))
                 .andExpect(status().isOk())
@@ -102,7 +97,7 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
     public void testList_WithSearchParameter() throws Exception {
         List<ResourceEntity> resources = new ArrayList<>();
 
-        when(resourceService.list()).thenReturn(resources);
+//        when(resourceService.list()).thenReturn(resources);
 
         mockMvc.perform(get("/api/v1/resources").param("search", "www"))
                 .andExpect(status().isOk())
@@ -112,9 +107,9 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
 
     @Test
     public void testDownload_WhenResourceNotExist_ReturnError() throws Exception {
-        when(resourceService.exists(any(URL.class))).thenReturn(false);
+//        when(resourceService.exists(any(URL.class))).thenReturn(false);
 
-        mockMvc.perform(get("/api/v1/resources/downloads?url=https://example.com"))
+        mockMvc.perform(get("/api/v1/resources/downloads?url=https://notfound.com"))
                 .andExpect(status().isNotFound())
                 .andExpect(
                         content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

@@ -1,6 +1,7 @@
 package com.pergamon.Pergamon.v1.domain;
 
 import com.pergamon.Pergamon.v1.service.ApiErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,6 +16,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @ControllerAdvice
 public class ApiExceptionHandler {
     @ExceptionHandler
@@ -125,6 +127,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ApiErrorResponse> handleException(Exception exc) {
+        log.error("Received error", exc);
         ApiErrorResponse error = new ApiErrorResponse();
 
 

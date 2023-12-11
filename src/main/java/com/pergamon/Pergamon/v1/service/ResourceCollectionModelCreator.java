@@ -9,6 +9,7 @@ import org.springframework.hateoas.CollectionModel;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 class ResourceCollectionModelCreator {
 
@@ -23,12 +24,16 @@ class ResourceCollectionModelCreator {
 
         for (ResourceEntity resource : resources) {
             ResourceBody body = new ResourceBody();
-            ContentEntity file = postgresFileRepository.findById(new ContentId(resource.getFileId())).get();
+            Optional<ContentEntity> file = postgresFileRepository.findById(new ContentId(resource.getFileId()));
 
-            body.setUrl(resource.getUrl())
-                .setFileName(file.getName())
-                .setFileType(file.getType())
-                .setCreatedAt(file.getCreatedAt());
+            if (file.isPresent()) {
+                ContentEntity contentEntity = file.get();
+                body.setUrl(resource.getUrl())
+                        .setFileName(contentEntity.getName())
+                        .setFileType(contentEntity.getType())
+                        .setCreatedAt(contentEntity.getCreatedAt());
+            }
+
 
             folderResources.add(new ResourceResource(resource, body));
         }

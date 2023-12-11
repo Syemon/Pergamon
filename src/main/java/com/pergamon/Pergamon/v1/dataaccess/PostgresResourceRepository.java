@@ -50,9 +50,12 @@ public class PostgresResourceRepository {
     }
 
     public Optional<ResourceEntity> findByUrl(String url) {
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject("SELECT * FROM resource WHERE url=?", PostgresResourceRepository::toResource, url)
-        );
+        return jdbcTemplate.query(
+                "SELECT * FROM resource WHERE url=?",
+                PostgresResourceRepository::toResource,
+                url)
+                .stream()
+                .findFirst();
     }
 
     public List<ResourceEntity> list() {
@@ -71,7 +74,8 @@ public class PostgresResourceRepository {
                 .setFileId(rs.getObject("content_id", Integer.class))
                 .setStatus(ResourceStatus.valueOf(rs.getString("status")))
                 .setUrl(rs.getString("url"))
-                .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class));
+                .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class))
+                .setModifiedAt(rs.getObject("updated_at", OffsetDateTime.class));
     }
 
     public ResourceEntity create(ResourceCommand resourceCommand) {
@@ -119,7 +123,7 @@ public class PostgresResourceRepository {
                     ps.setObject(1, fileId);
                     ps.setString(2, resource.getUrl().toString());
                     ps.setObject(3, modifiedAt);
-                    ps.setString(4, resource.getUrl().toString());
+                    ps.setString(4, resource.getStatus().name());
                     ps.setInt(5, resource.getAttemptNumber());
                     ps.setInt(6, resource.getId().id());
                     return ps;
