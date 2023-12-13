@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
@@ -104,7 +105,10 @@ public class ResourceServiceTests {
         Resource resource = new Resource().setUrl(url);
 
         // when
-        sut.create(resource);
+        assertThatException()
+                .isThrownBy(() -> sut.create(resource))
+                .isInstanceOf(IllegalArgumentException.class)
+                .withMessage("Received content is not valid. Details: [failureMessage]");
 
         // then
         verify(resourceCommandRepository, times(1)).saveResource(resource);

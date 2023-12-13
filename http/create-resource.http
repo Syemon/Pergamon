@@ -1,5 +1,5 @@
 ###
-PUT http://127.0.0.1:48080/api/v1/resources
+POST http://127.0.0.1:48080/api/v1/resources
 Accept-Charset: utf-8
 Accept-Language: pl
 Content-Type: application/hal+json

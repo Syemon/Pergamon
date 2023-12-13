@@ -2,7 +2,6 @@ package com.pergamon.Pergamon.v1.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pergamon.Pergamon.PostgresTestContainerResourceTest;
-import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.service.Profile;
 import com.pergamon.Pergamon.v1.web.ResourceController;
 import org.junit.jupiter.api.Test;
@@ -13,13 +12,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,15 +32,12 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
     @Autowired
     private MockMvc mockMvc;
 
-//    @MockBean
-//    private ResourceService resourceService;
-
     @Test
     public void testUpsert_WhenCorrectUrl() throws Exception {
         body.put("url", "https://wikipedia.com");
         String jsonBody = mapper.writeValueAsString(body);
 
-        mockMvc.perform(put(
+        mockMvc.perform(post(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
     }
@@ -53,10 +47,32 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
         body.put("url", "lorem");
         String jsonBody = mapper.writeValueAsString(body);
 
-        mockMvc.perform(put(
+        mockMvc.perform(post(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message").value("Invalid data"));
+    }
+
+    @Test
+    public void testUpsert_WhesnIncorrectUrl_ReturnError() throws Exception {
+        body.put("url", "https://example.com/..asd");
+        String jsonBody = mapper.writeValueAsString(body);
+
+        mockMvc.perform(post(
+                        "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("message").value("Received content is not valid. Details: [Filename contains invalid path sequence]"));
+    }
+
+    @Test
+    public void create_shouldReturnConflictStatus_whenResourceAlreadyExists() throws Exception {
+        body.put("url", "https://example.com");
+        String jsonBody = mapper.writeValueAsString(body);
+
+        mockMvc.perform(post(
+                        "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("message").value("Resource https://example.com was already created"));
     }
 
     @Test
@@ -64,7 +80,7 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
         body.put("url", "https://y.com");
         String jsonBody = mapper.writeValueAsString(body);
 
-        mockMvc.perform(put(
+        mockMvc.perform(post(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message")
@@ -74,7 +90,7 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
     @Test
     public void testUpsert_WhenEmptyBodyProvided_ReturnError() throws Exception {
         String jsonBody = mapper.writeValueAsString(body);
-        mockMvc.perform(put(
+        mockMvc.perform(post(
                 "/api/v1/resources").content(jsonBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message")
@@ -83,10 +99,6 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
 
     @Test
     public void testList_WhenSuccess() throws Exception {
-        List<ResourceEntity> resources = new ArrayList<>();
-
-//        when(resourceService.list()).thenReturn(resources);
-
         mockMvc.perform(get("/api/v1/resources"))
                 .andExpect(status().isOk())
                 .andExpect(
@@ -95,10 +107,6 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
 
     @Test
     public void testList_WithSearchParameter() throws Exception {
-        List<ResourceEntity> resources = new ArrayList<>();
-
-//        when(resourceService.list()).thenReturn(resources);
-
         mockMvc.perform(get("/api/v1/resources").param("search", "www"))
                 .andExpect(status().isOk())
                 .andExpect(
@@ -107,8 +115,6 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
 
     @Test
     public void testDownload_WhenResourceNotExist_ReturnError() throws Exception {
-//        when(resourceService.exists(any(URL.class))).thenReturn(false);
-
         mockMvc.perform(get("/api/v1/resources/downloads?url=https://notfound.com"))
                 .andExpect(status().isNotFound())
                 .andExpect(

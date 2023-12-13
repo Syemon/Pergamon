@@ -1,8 +1,8 @@
 package com.pergamon.Pergamon.v1.web;
 
+import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceConnectionException;
-import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.domain.ResourceNotFoundException;
 import com.pergamon.Pergamon.v1.service.ApiResponse;
 import com.pergamon.Pergamon.v1.service.ResourceResource;
@@ -13,7 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,15 +35,15 @@ public class ResourceController {
         this.resourceService = resourceService;
     }
 
-    @PutMapping(value = "/resources")
-    public ResponseEntity<ApiResponse> upsert(@Valid @RequestBody ResourceCommand resourceCommand) throws IOException {
+    @PostMapping(value = "/resources")
+    public ResponseEntity<ApiResponse> create(@Valid @RequestBody ResourceCommand resourceCommand) throws IOException {
         try {
             resourceCommand.getUrl().openConnection().connect();
         } catch (IOException exc) {
             throw new ResourceConnectionException("It's impossible to connect to given resource. Check given URL or try again later");
         }
 
-        resourceService.upsert(resourceCommand);
+        resourceService.create(resourceCommand);
 
         return ResponseEntity.accepted().build();
     }

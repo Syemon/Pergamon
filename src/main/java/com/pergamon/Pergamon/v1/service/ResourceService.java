@@ -8,6 +8,7 @@ import com.pergamon.Pergamon.v1.domain.Content;
 import com.pergamon.Pergamon.v1.domain.ContentCommand;
 import com.pergamon.Pergamon.v1.domain.ContentCommandRepository;
 import com.pergamon.Pergamon.v1.domain.Resource;
+import com.pergamon.Pergamon.v1.domain.ResourceAlreadyCreatedException;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
@@ -40,13 +41,12 @@ public class ResourceService {
     private final ApplicationEventMulticaster applicationEventMulticaster;
     private final EventMapper eventMapper;
 
-    public void upsert(ResourceCommand resourceCommand) throws IOException {
+    public void create(ResourceCommand resourceCommand) throws IOException {
         log.info("Trying to upsert resource from url '{}'", resourceCommand.getUrl());
         Optional<Resource> resourceOptional = resourceQueryRepository.findByUrl(resourceCommand.getUrl());
         if (resourceOptional.isPresent()) {
-            log.info("Resource already exists. Resource id={}. Updating file", resourceOptional.get().getId().id());
-            return;
-//            update(resourceCommand.getUrl()); // TODO change to send whole command
+            log.info("Resource already exists. Resource id={}", resourceOptional.get().getId().id());
+            throw new ResourceAlreadyCreatedException("Resource " + resourceCommand.getUrl() + " was already created");
         }
         log.info("Persisting new resource and trying to download content");
         Resource resource = resourceCommandRepository.createResource(resourceCommand);
@@ -60,7 +60,7 @@ public class ResourceService {
             log.error("Resource content failed initial validation: {}", error.get().getFailureMessages());
             resource.setStatus(ResourceStatus.FAILED);
             resourceCommandRepository.saveResource(resource);
-            return; //TODO: Exc to create resp for agent
+            throw new IllegalArgumentException("Received content is not valid. Details: " + error.get().getFailureMessages());
         }
         ContentCommand contentCommand = contentService.createContentCommand(url);
         Content content = contentCommandRepository.createContent(contentCommand);
@@ -72,14 +72,6 @@ public class ResourceService {
                 eventMapper.mapResourceAndContentToStoreResourceEvent(resource, content)
         );
     }
-
-//    @Transactional
-//    public void update(URL url) throws IOException {
-//        ContentEntity file = fileDao.findByUrl(url);
-//        ContentEntity updateFile = contentService.updateFile(url, file);
-//
-//        fileDao.update(updateFile);
-//    }
 
     @Transactional
     public boolean exists(URL url) {

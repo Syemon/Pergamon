@@ -126,6 +126,17 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<ApiErrorResponse> handleException(ResourceAlreadyCreatedException exc) {
+        ApiErrorResponse error = new ApiErrorResponse();
+
+        error.setStatus(HttpStatus.CONFLICT.value());
+        error.setMessage(exc.getMessage());
+        error.setTimestamp(System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ApiErrorResponse> handleException(Exception exc) {
         log.error("Received error", exc);
         ApiErrorResponse error = new ApiErrorResponse();
