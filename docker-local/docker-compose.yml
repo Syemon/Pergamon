@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  usersystem:
+    build: .
+    container_name: pergamon
+    ports:
+      - 48080:8080
+      - 48787:8787
+    depends_on:
+      - db
+    environment:
+      - TZ
+      - APP.HOSTNAME
+      - DATABASE_NAME
+      - DATABASE_URL
+      - DATABASE_USER
+      - DATABASE_PASSWORD
+
+  db:
+    image: 'postgres:15-alpine'
+    container_name: db
+    environment:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
