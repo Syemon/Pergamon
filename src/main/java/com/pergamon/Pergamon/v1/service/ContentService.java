@@ -1,10 +1,8 @@
 package com.pergamon.Pergamon.v1.service;
 
-import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.domain.ContentCommand;
 import com.pergamon.Pergamon.v1.domain.ContentDomainException;
 import com.pergamon.Pergamon.v1.domain.FileNotFoundException;
-import com.pergamon.Pergamon.v1.domain.FileStorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
@@ -17,8 +15,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,42 +67,6 @@ class ContentService {
                 .storageName(storedFileName)
                 .type(contentType)
                 .build();
-    }
-    public ContentEntity storeFile(URL url) {
-        String storedFileName = UUID.randomUUID().toString();
-
-        String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
-        try {
-            String contentType = url.openConnection().getContentType();
-
-            ContentEntity contentEntity = ContentEntity.builder()
-                    .name(fileName)
-                    .storageName(storedFileName)
-                    .type(contentType)
-                    .createdAt(OffsetDateTime.now())
-                    .build();
-
-            Path targetLocation = fileStorageLocation.resolve(storedFileName);
-            Files.copy(url.openStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
-            return contentEntity;
-        } catch (IOException ex) {
-            throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
-        }
-    }
-
-    public ContentEntity updateFile(URL url, ContentEntity file) throws IOException {
-        Path targetLocation = fileStorageLocation.resolve(file.getStorageName());
-        String fileName = StringUtils.cleanPath(FilenameUtils.getName(url.getPath()));
-
-        try {
-            Files.copy(url.openStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException ex) {
-            throw new FileStorageException("An error has occurred during file update!", ex);
-        }
-
-        return file.setName(fileName)
-            .setType(url.openConnection().getContentType());
     }
 
     public Resource loadFileAsResource(String fileName) {

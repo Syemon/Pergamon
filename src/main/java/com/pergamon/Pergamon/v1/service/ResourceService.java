@@ -73,9 +73,8 @@ public class ResourceService {
         );
     }
 
-    @Transactional
     public boolean exists(URL url) {
-        return resourceDao.exists(url);
+        return resourceQueryRepository.findByUrl(url).isPresent();
     }
 
     @Transactional
