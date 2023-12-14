@@ -10,9 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Optional;
@@ -39,8 +37,7 @@ public class ContentServiceTests {
     @Test
     void validateInitialContent_shouldReturnFailureObject_whenPathIsNotValid() {
         // given
-        InputStream inputStream = new ByteArrayInputStream("test".getBytes());
-        when(url.getPath()).thenReturn("https://example/..test.txt");
+        when(url.getPath()).thenReturn("https://wikipedia.com/..test.txt");
 
         // when
         Optional<ValidationError> result = sut.validateInitialContent(url);
