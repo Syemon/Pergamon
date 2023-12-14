@@ -2,9 +2,9 @@ package com.pergamon.Pergamon.v1.dao.integration;
 
 import com.pergamon.Pergamon.PergamonApplication;
 import com.pergamon.Pergamon.PostgresTestContainerResourceTest;
+import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresFileRepository;
 import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
-import com.pergamon.Pergamon.v1.dataaccess.ContentEntity;
 import com.pergamon.Pergamon.v1.dataaccess.ResourceEntity;
 import com.pergamon.Pergamon.v1.service.Profile;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,7 +35,6 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
     }
 
     @Test
-    @Transactional
     public void testCreate_WhenCorrectData_ReturnFile() {
         contentEntity = ContentEntity.builder()
                 .name("test.txt")
@@ -56,7 +54,6 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
     }
 
     @Test
-    @Transactional
     public void testFindByUrl_WhenExists_ReturnFile() throws MalformedURLException {
         URL url = new URL("https://example.com");
         ResourceEntity resource = postgresResourceRepository.findByUrl(url.toString()).get();
@@ -68,7 +65,6 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
     }
 
     @Test
-    @Transactional
     public void testUpdate() { //FIXME: It can end up as a false positive
         ContentEntity file = getFile();
 
@@ -83,7 +79,6 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
         assertThat(file.getType()).isEqualTo("plain/html");
     }
 
-    @Transactional
     public ContentEntity getFile() {
         ContentEntity file = ContentEntity.builder()
                 .name("test.txt")

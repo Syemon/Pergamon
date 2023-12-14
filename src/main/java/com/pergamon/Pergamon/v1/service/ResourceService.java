@@ -20,7 +20,6 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -77,7 +76,6 @@ public class ResourceService {
         return resourceQueryRepository.findByUrl(url).isPresent();
     }
 
-    @Transactional
     public ResponseEntity<org.springframework.core.io.Resource> download(URL url) {
         ContentEntity file = fileDao.findByUrl(url);
 
@@ -90,12 +88,10 @@ public class ResourceService {
                 .body(fileResource);
     }
 
-    @Transactional
     public List<ResourceEntity> list() {
         return resourceDao.list();
     }
 
-    @Transactional
     public List<ResourceEntity> list(String search) {
         return resourceDao.list(search);
     }

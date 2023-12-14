@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,13 +42,6 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
     }
 
     @Test
-    @Transactional
-    public void testCreate_WhenCorrectData() throws MalformedURLException {
-        sut.save(getFile(), new URL("https://testcreate.qwerty"));
-    }
-
-    @Test
-    @Transactional
     public void create() throws MalformedURLException {
         // given
         URL url = new URL("https://newurl.xyz");
@@ -69,18 +61,15 @@ public class PostgresResourceRepositoryTests extends PostgresTestContainerResour
     }
 
     @Test
-    @Transactional
     public void testExists_WhenNotExists_ReturnFalse() throws MalformedURLException {
         assertThat(sut.exists(new URL("https://example2.com"))).isFalse();
     }
 
     @Test
-    @Transactional
     public void testExists_WhenExists_ReturnTrue() {
         assertThat(sut.exists(url)).isTrue();
     }
 
-    @Transactional
     public ContentEntity getFile() {
         ContentEntity file = ContentEntity.builder()
                 .name("test.txt")

@@ -3,6 +3,7 @@ package com.pergamon.Pergamon.v1.dataaccess;
 import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
 import com.pergamon.Pergamon.v1.domain.ResourceStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
@@ -14,35 +15,12 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class PostgresResourceRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public PostgresResourceRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public ResourceEntity save(ContentEntity file, URL url) {
-        OffsetDateTime createdAt = OffsetDateTime.now();
-        String sql = "INSERT INTO resource(url, content_id, created_at) VALUES(?, ?, ?)";
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        String idColumn = "id";
-        jdbcTemplate.update(con -> {
-                    PreparedStatement ps = con.prepareStatement(sql, new String[]{idColumn});
-                    ps.setString(1, url.toString());
-                    ps.setInt(2, file.getId());
-                    ps.setObject(3, createdAt);
-                    return ps;
-                }
-                , keyHolder);
-
-        int id = (int) keyHolder.getKeys().get(idColumn);
-
-        return new ResourceEntity()
-                .setId(id)
-                .setFileId(file.getId())
-                .setStatus(ResourceStatus.NEW)
-                .setUrl(url.toString())
-                .setCreatedAt(createdAt);
     }
 
     public Boolean exists(URL url) {
