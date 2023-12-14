@@ -55,7 +55,7 @@ public class ResourceControllerTest extends PostgresTestContainerResourceTest {
 
     @Test
     public void testUpsert_WhesnIncorrectUrl_ReturnError() throws Exception {
-        body.put("url", "https://example.com/..asd");
+        body.put("url", "https://wikipedia.com/..asd");
         String jsonBody = mapper.writeValueAsString(body);
 
         mockMvc.perform(post(
