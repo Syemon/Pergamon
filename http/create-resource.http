@@ -1,0 +1,9 @@
+###
+POST http://127.0.0.1:48080/api/v1/resources
+Accept-Charset: utf-8
+Accept-Language: pl
+Content-Type: application/hal+json
+
+{
+  "url": "https://www.google.com/search?q=asd&sca_esv=589119146&sxsrf=AM9HkKm4BhY4oiRQdlQULZA7CfchIBwERg%3A1702056416893&source=hp&ei=4FFzZbaINPWpxc8PoMSloAw&iflsig=AO6bgOgAAAAAZXNf8KT1kD3PBEDyHtYRvgqo67zUQk8y&ved=0ahUKEwi2-PSgroCDAxX1VPEDHSBiCcQQ4dUDCAo&uact=5&oq=asd&gs_lp=Egdnd3Mtd2l6IgNhc2QyChAjGIAEGIoFGCcyChAuGIAEGIoFGEMyChAAGIAEGIoFGEMyChAAGIAEGIoFGEMyChAAGIAEGIoFGEMyChAAGIAEGIoFGEMyBRAAGIAEMgUQABiABDILEC4YgAQYxwEY0QMyBRAAGIAESNEGUOABWPgCcAF4AJABAJgBaaABpQKqAQMxLjK4AQPIAQD4AQGoAgrCAgcQIxjqAhgnwgIEECMYJ8ICERAuGIAEGIoFGJECGMcBGNEDwgILEAAYgAQYigUYkQLCAgUQLhiABA&sclient=gws-wiz"
+}

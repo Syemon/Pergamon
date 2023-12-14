@@ -1,9 +1,10 @@
 package com.pergamon.Pergamon.v1.resource;
 
+import com.pergamon.Pergamon.v1.service.ResourceBody;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,7 +40,7 @@ public class ResourceBodyTests {
 
     @Test
     public void testCreatedAt() {
-        LocalDateTime date = LocalDateTime.now();
+        OffsetDateTime date = OffsetDateTime.now();
         resourceBody.setCreatedAt(date);
 
         assertEquals(date, resourceBody.getCreatedAt());
