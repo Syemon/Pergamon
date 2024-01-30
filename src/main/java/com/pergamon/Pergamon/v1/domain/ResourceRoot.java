@@ -6,18 +6,13 @@ import java.net.URL;
 import java.time.OffsetDateTime;
 
 @Data
-public class Resource {
+public class ResourceRoot {
 
     private ResourceId id;
-    private ContentId contentId;
+    private Content content;
     private URL url;
     private OffsetDateTime createdAt;
     private OffsetDateTime modifiedAt;
     private ResourceStatus status;
     private int attemptNumber;
-
-    public int incrementAttemptNumber() {
-        this.attemptNumber++;
-        return attemptNumber;
-    }
 }

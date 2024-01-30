@@ -33,6 +33,12 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
     <dependency>
+      <groupId>net.javacrumbs.shedlock</groupId>
+      <artifactId>shedlock-spring</artifactId>
+      <version>5.10.2</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
     </dependency>
@@ -40,6 +46,9 @@
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
     </dependency>
+
+  <!-- Test -->
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -52,6 +61,7 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- Util -->
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>

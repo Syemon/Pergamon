@@ -1,12 +1,17 @@
 package com.pergamon.Pergamon.v1.dataaccess;
 
+import com.pergamon.Pergamon.v1.domain.Content;
+import com.pergamon.Pergamon.v1.domain.ContentId;
 import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceCommand;
+import com.pergamon.Pergamon.v1.domain.ResourceId;
+import com.pergamon.Pergamon.v1.domain.ResourceRoot;
 import com.pergamon.Pergamon.v1.domain.ResourceStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +19,7 @@ import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 public class PostgresResourceRepository {
@@ -54,6 +60,34 @@ public class PostgresResourceRepository {
                 .setUrl(rs.getString("url"))
                 .setCreatedAt(rs.getObject("created_at", OffsetDateTime.class))
                 .setModifiedAt(rs.getObject("updated_at", OffsetDateTime.class));
+    }
+
+    private static ResourceRoot toResourceRoot(ResultSet rs, int rowNum) throws SQLException {
+        Content content = Content.builder()
+                .id(new ContentId(rs.getInt("resource_content_id")))
+                .name(rs.getString("content_name"))
+                .storageName(rs.getString("content_storage_name"))
+                .type(rs.getString("content_type"))
+                .createdAt(rs.getObject("content_created_at", OffsetDateTime.class))
+                .updatedAt(rs.getObject("content_updated_at", OffsetDateTime.class))
+                .build();
+
+        URL url;
+        try {
+            url = new URL(rs.getString("resource_url"));
+        } catch (MalformedURLException e) {
+            log.error("Received MalformedURLException. Was url edited in database?", e);
+            throw new IllegalStateException("Malformed url when extracted from database", e);
+        }
+
+        return new ResourceRoot()
+                .setId(new ResourceId(rs.getInt("resource_content_id")))
+                .setContent(content)
+                .setStatus(ResourceStatus.valueOf(rs.getString("resource_status")))
+                .setUrl(url)
+                .setAttemptNumber(rs.getInt("resource_attempt_number"))
+                .setCreatedAt(rs.getObject("resource_created_at", OffsetDateTime.class))
+                .setModifiedAt(rs.getObject("resource_updated_at", OffsetDateTime.class));
     }
 
     public ResourceEntity create(ResourceCommand resourceCommand) {
@@ -116,5 +150,38 @@ public class PostgresResourceRepository {
                 .setModifiedAt(resource.getModifiedAt())
                 .setFileId(fileId)
                 .setAttemptNumber(resource.getAttemptNumber());
+    }
+
+    public List<ResourceRoot> listResourceRootToRetry(Set<ResourceStatus> resourceStatuses, int olderThenInMinutes, int maxRetryCount) {
+        List<String> statuses = resourceStatuses.stream().map(Enum::name).toList();
+        String[] statusesParam = statuses.toArray(new String[0]);
+        return jdbcTemplate.query("""
+                        SELECT 
+                            r.content_id as resource_content_id,
+                            r.url as resource_url,
+                            r.status as resource_status,
+                            r.created_at as resource_created_at,
+                            r.updated_at as resource_updated_at,
+                            r.attempt_number as resource_attempt_number,
+                            c.id as content_id,
+                            c.name as content_name,
+                            c.storage_name as content_storage_name,
+                            c.type as content_type,
+                            c.created_at as content_created_at,
+                            c.updated_at as content_updated_at
+                        FROM 
+                            resource as r 
+                        INNER JOIN
+                            content as c on  r.content_id = c.id
+                        WHERE
+                            r.status = ANY(?)
+                            and r.created_at < NOW() - make_interval(mins => ?)
+                            and r.attempt_number < ?;
+                """,
+                (PostgresResourceRepository::toResourceRoot),
+                statusesParam,
+                olderThenInMinutes,
+                maxRetryCount
+        );
     }
 }

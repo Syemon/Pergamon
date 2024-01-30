@@ -3,16 +3,21 @@ package com.pergamon.Pergamon.v1.dataaccess;
 import com.pergamon.Pergamon.v1.domain.ContentCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
+import com.pergamon.Pergamon.v1.domain.ResourceRootQueryRepository;
 import com.pergamon.Pergamon.v1.domain.StorageRepository;
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @org.springframework.context.annotation.Configuration
+@EnableScheduling
+@EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
 public class DataAccessConfiguration {
 
     @Bean
@@ -38,6 +43,11 @@ public class DataAccessConfiguration {
     @Bean
     public ResourceQueryRepository resourceQueryRepository(PostgresResourceRepository postgresResourceRepository, ResourceMapper resourceMapper) {
         return new ResourceQueryRepositoryImpl(postgresResourceRepository, resourceMapper);
+    }
+
+    @Bean
+    public ResourceRootQueryRepository resourceRootQueryRepository(PostgresResourceRepository postgresResourceRepository) {
+        return new ResourceRootQueryRepositoryImpl(postgresResourceRepository);
     }
 
     @Bean

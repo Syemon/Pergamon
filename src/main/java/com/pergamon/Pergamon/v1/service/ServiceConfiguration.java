@@ -6,13 +6,17 @@ import com.pergamon.Pergamon.v1.domain.ContentCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
 import com.pergamon.Pergamon.v1.domain.StorageRepository;
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @org.springframework.context.annotation.Configuration
+@EnableScheduling
+@EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
 public class ServiceConfiguration {
 
     @Bean

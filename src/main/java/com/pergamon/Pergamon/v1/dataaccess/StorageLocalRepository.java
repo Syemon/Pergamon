@@ -19,7 +19,7 @@ class StorageLocalRepository implements StorageRepository {
     private final Path fileStorageLocation;
 
     @Override
-    public Resource store(Resource resource, Content content) { //TODO add try counter?
+    public Resource store(Resource resource, Content content) {
         String contentName = content.getName();
         log.info("Trying to store content '{}' from url '{}' into local repository", contentName, resource.getUrl());
         try {
@@ -33,6 +33,8 @@ class StorageLocalRepository implements StorageRepository {
             log.error("Could not store file '{}'. Will try again later", contentName, e);
             resource.setStatus(ResourceStatus.ERROR);
             return resource;
+        } finally {
+            resource.incrementAttemptNumber();
         }
     }
 }

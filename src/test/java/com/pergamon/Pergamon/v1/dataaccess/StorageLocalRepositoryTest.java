@@ -3,7 +3,6 @@ package com.pergamon.Pergamon.v1.dataaccess;
 import com.pergamon.Pergamon.v1.domain.Content;
 import com.pergamon.Pergamon.v1.domain.Resource;
 import com.pergamon.Pergamon.v1.domain.ResourceStatus;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +17,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,6 +57,7 @@ class StorageLocalRepositoryTest {
     @Test
     void store_shouldSetPositiveStatus_whenSuccessfullyStoredResource() throws IOException {
         //given
+        assertThat(resource.getAttemptNumber()).isZero();
         InputStream inputStream = new ByteArrayInputStream("test".getBytes());
         when(url.openStream()).thenReturn(inputStream);
 
@@ -64,18 +65,21 @@ class StorageLocalRepositoryTest {
         Resource resultResource = sut.store(resource, content);
 
         //then
-        Assertions.assertThat(resultResource.getStatus()).isEqualTo(ResourceStatus.DONE);
+        assertThat(resultResource.getStatus()).isEqualTo(ResourceStatus.DONE);
+        assertThat(resource.getAttemptNumber()).isEqualTo(1);
     }
 
     @Test
     void store_shouldSetNegativeStatus_whenCouldNotStoreResource() throws IOException {
         //given
+        assertThat(resource.getAttemptNumber()).isZero();
         when(url.openStream()).thenThrow(new IOException());
 
         //when
         Resource resultResource = sut.store(resource, content);
 
         //then
-        Assertions.assertThat(resultResource.getStatus()).isEqualTo(ResourceStatus.ERROR);
+        assertThat(resultResource.getStatus()).isEqualTo(ResourceStatus.ERROR);
+        assertThat(resource.getAttemptNumber()).isEqualTo(1);
     }
 }
