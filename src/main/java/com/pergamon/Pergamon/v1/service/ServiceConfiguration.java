@@ -6,6 +6,8 @@ import com.pergamon.Pergamon.v1.domain.ContentCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
 import com.pergamon.Pergamon.v1.domain.StorageRepository;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +20,16 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
 public class ServiceConfiguration {
+
+    @Bean
+    public OpenAPI swaggerOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Pergamon API")
+                        .description("Pergamon API Doc")
+                        .version("0.0.1")
+                );
+    }
 
     @Bean
     public ContentService fileStorageService(@Value("${file.upload-dir}") String uploadDirPath) {

@@ -90,4 +90,5 @@ class ResourceRootQueryRepositoryImplTest extends PostgresTestContainerResourceT
                         "createdAt", "content.createdAt", "content.updatedAt", "content.name", "content.type", "content.storageName")
                 .isEqualTo(expectedResources);
     }
+
 }
