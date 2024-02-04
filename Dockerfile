@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-jammy
+FROM eclipse-temurin:21-jre-jammy
 
 RUN addgroup usergroup; adduser  --ingroup usergroup --disabled-password appuser
 RUN mkdir "uploads"

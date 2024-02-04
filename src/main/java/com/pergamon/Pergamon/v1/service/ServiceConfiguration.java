@@ -5,6 +5,7 @@ import com.pergamon.Pergamon.v1.dataaccess.PostgresResourceRepository;
 import com.pergamon.Pergamon.v1.domain.ContentCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceCommandRepository;
 import com.pergamon.Pergamon.v1.domain.ResourceQueryRepository;
+import com.pergamon.Pergamon.v1.domain.ResourceRootQueryRepository;
 import com.pergamon.Pergamon.v1.domain.StorageRepository;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -80,5 +81,24 @@ public class ServiceConfiguration {
             ResourceCommandRepository resourceCommandRepository
     ) {
         return new StoreResourceListener(storageRepository, resourceCommandRepository);
+    }
+
+    @Bean
+    public StoreResourceScheduler storeResourceScheduler(
+            StoreResourceSchedulerProcessor storeResourceSchedulerProcessor
+    ) {
+        return new StoreResourceScheduler(storeResourceSchedulerProcessor);
+    }
+
+    @Bean
+    public StoreResourceSchedulerProcessor storeResourceSchedulerProcessor(
+            ResourceRootQueryRepository resourceRootQueryRepository,
+            ApplicationEventMulticaster applicationEventMulticaster
+    ) {
+        return new StoreResourceSchedulerProcessor(
+                resourceRootQueryRepository,
+                applicationEventMulticaster,
+                new EventMapper()
+        );
     }
 }

@@ -14,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 class StoreResourceSchedulerProcessor {
 
-    private final static Set<ResourceStatus> STATUSES_TO_RETRY = Set.of(ResourceStatus.RETRY, ResourceStatus.ERROR);
+    private final static Set<ResourceStatus> STATUSES_TO_RETRY = Set.of(ResourceStatus.RETRY, ResourceStatus.NEW);
     private final static Integer RETRY_RESOURCES_OLDER_THEN_IN_MINUTES = 30;
     private final static Integer MAX_RETRY_COUNT = 3;
 
