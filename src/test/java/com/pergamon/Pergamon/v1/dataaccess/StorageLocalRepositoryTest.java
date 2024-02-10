@@ -79,7 +79,21 @@ class StorageLocalRepositoryTest {
         Resource resultResource = sut.store(resource, content);
 
         //then
-        assertThat(resultResource.getStatus()).isEqualTo(ResourceStatus.ERROR);
+        assertThat(resultResource.getStatus()).isEqualTo(ResourceStatus.RETRY);
+        assertThat(resource.getAttemptNumber()).isEqualTo(1);
+    }
+
+    @Test
+    void store_shouldSetNegativeStatus_whenReceivedUnexpectedError() throws IOException {
+        //given
+        assertThat(resource.getAttemptNumber()).isZero();
+        when(url.openStream()).thenThrow(new RuntimeException());
+
+        //when
+        Resource resultResource = sut.store(resource, content);
+
+        //then
+        assertThat(resultResource.getStatus()).isEqualTo(ResourceStatus.RETRY);
         assertThat(resource.getAttemptNumber()).isEqualTo(1);
     }
 }

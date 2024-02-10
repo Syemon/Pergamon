@@ -11,7 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -65,6 +67,8 @@ public class PostgresFileRepositoryTests extends PostgresTestContainerResourceTe
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testUpdate() { //FIXME: It can end up as a false positive
         ContentEntity file = getFile();
 

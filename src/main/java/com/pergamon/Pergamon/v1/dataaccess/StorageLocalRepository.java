@@ -31,7 +31,11 @@ class StorageLocalRepository implements StorageRepository {
             return resource;
         } catch (IOException e) {
             log.error("Could not store file '{}'. Will try again later", contentName, e);
-            resource.setStatus(ResourceStatus.ERROR);
+            resource.setStatus(ResourceStatus.RETRY);
+            return resource;
+        } catch (Exception e) {
+            log.error("Could not store file '{}'. Received unexpected error", contentName, e);
+            resource.setStatus(ResourceStatus.RETRY);
             return resource;
         } finally {
             resource.incrementAttemptNumber();

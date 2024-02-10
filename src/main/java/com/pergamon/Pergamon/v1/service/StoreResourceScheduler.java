@@ -7,10 +7,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class StoreResourceScheduler {
 
     private final StoreResourceSchedulerProcessor storeResourceSchedulerProcessor;
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/2 * * * ?")
     public void retryStoreResource() {
         ExecuteTimeLogger.logTime(
-                StoreResourceScheduler.class.descriptorString(),
+                this.getClass(),
                 storeResourceSchedulerProcessor::retry
         );
     }
