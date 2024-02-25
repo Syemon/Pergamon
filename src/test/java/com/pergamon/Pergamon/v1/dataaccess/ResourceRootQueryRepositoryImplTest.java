@@ -16,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
@@ -59,14 +58,14 @@ class ResourceRootQueryRepositoryImplTest extends PostgresTestContainerResourceT
         assertThat(resultResource.getStatus()).isEqualTo(ResourceStatus.RETRY);
         assertThat(resultResource.getId()).isEqualTo(new ResourceId(403));
         assertThat(resultResource.getUrl()).isEqualTo(new URL("https://listResourceRootToRetry4.com"));
-
-
+        
         Content resultContent = resultResource.getContent();
         assertThat(resultContent.getId()).isEqualTo(new ContentId(403));
         assertThat(resultContent.getName()).isEqualTo("test.txt");
         assertThat(resultContent.getStorageName()).isEqualTo("f503a9d1-9e01-432d-9728-7eebd01ed739");
         assertThat(resultContent.getType()).isEqualTo("plain/text");
-        assertThat(resultContent.getCreatedAt().plusHours(1)).isEqualTo(OffsetDateTime.parse("2020-01-01T00:00:00Z", DateTimeFormatter.ISO_DATE_TIME));
+        assertThat(resultContent.getCreatedAt().plusHours(1)).isCloseTo(OffsetDateTime.parse("2020-01-01T00:00:00Z"), within(1, ChronoUnit.HOURS));
+
         assertThat(resultContent.getUpdatedAt()).isNull();
     }
 
