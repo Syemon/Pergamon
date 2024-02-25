@@ -17,10 +17,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 @SpringBootTest
 @ActiveProfiles(value = Profile.TEST_FLYWAY)
@@ -45,7 +47,7 @@ class ResourceRootQueryRepositoryImplTest extends PostgresTestContainerResourceT
         // when
         List<ResourceRoot> result = sut.listToRetry(
                 Set.of(ResourceStatus.RETRY),
-                30,
+                15,
                 3);
 
         // then
@@ -53,7 +55,7 @@ class ResourceRootQueryRepositoryImplTest extends PostgresTestContainerResourceT
 
         ResourceRoot resultResource = result.getFirst();
         assertThat(resultResource.getAttemptNumber()).isEqualTo(0);
-        assertThat(resultResource.getCreatedAt().plusHours(1)).isEqualTo(OffsetDateTime.parse("2020-01-01T00:00:00Z", DateTimeFormatter.ISO_DATE_TIME)); //FIXME: problem with timezone on test envrionment
+        assertThat(resultResource.getCreatedAt().plusMinutes(15)).isCloseTo(OffsetDateTime.now(), within(5, ChronoUnit.MINUTES));
         assertThat(resultResource.getStatus()).isEqualTo(ResourceStatus.RETRY);
         assertThat(resultResource.getId()).isEqualTo(new ResourceId(403));
         assertThat(resultResource.getUrl()).isEqualTo(new URL("https://listResourceRootToRetry4.com"));

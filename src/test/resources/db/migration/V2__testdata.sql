@@ -12,4 +12,4 @@ INSERT INTO resource (id, content_id, url, status, created_at, attempt_number) V
 (400, 400,  'https://listResourceRootToRetry.com',            'ERROR', '2020-01-01', 0),
 (401, 401,  'https://listResourceRootToRetry2.com',           'RETRY', NOW(),        0),
 (402, 402,  'https://listResourceRootToRetry3.com',           'NEW',   '2020-01-01', 0),
-(403, 403,  'https://listResourceRootToRetry4.com',           'RETRY', '2020-01-01', 0);
+(403, 403,  'https://listResourceRootToRetry4.com',           'RETRY', NOW() - make_interval(mins => 20), 0);
