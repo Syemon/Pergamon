@@ -1,6 +1,10 @@
-package com.pergamon.Pergamon.v1.domain;
+package com.pergamon.Pergamon.v1.service;
 
-import com.pergamon.Pergamon.v1.service.ApiErrorResponse;
+import com.pergamon.Pergamon.v1.domain.FileNotFoundException;
+import com.pergamon.Pergamon.v1.domain.FileStorageException;
+import com.pergamon.Pergamon.v1.domain.ResourceAlreadyCreatedException;
+import com.pergamon.Pergamon.v1.domain.ResourceConnectionException;
+import com.pergamon.Pergamon.v1.domain.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

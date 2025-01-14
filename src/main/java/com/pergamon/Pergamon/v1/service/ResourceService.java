@@ -41,7 +41,7 @@ public class ResourceService {
     private final EventMapper eventMapper;
 
     public void create(ResourceCommand resourceCommand) throws IOException {
-        log.info("Trying to upsert resource from url '{}'", resourceCommand.getUrl());
+        log.info("Trying to create resource from url '{}'", resourceCommand.getUrl());
         Optional<Resource> resourceOptional = resourceQueryRepository.findByUrl(resourceCommand.getUrl());
         if (resourceOptional.isPresent()) {
             log.info("Resource already exists. Resource id={}", resourceOptional.get().getId().id());
