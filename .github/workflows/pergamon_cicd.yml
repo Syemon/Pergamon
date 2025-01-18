@@ -8,8 +8,10 @@
 
 name: Java CI with Maven
 
-on: push
-
+on:
+  push:
+    paths:
+      - 'pergamnon/**'
 jobs:
   build:
     runs-on: ubuntu-latest
