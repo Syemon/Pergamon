@@ -7,6 +7,6 @@ USER appuser
 
 WORKDIR /opt
 
-COPY target/timer.jar application.jar
+COPY target/Pergamnon.jar application.jar
 
 ENTRYPOINT ["java", "-jar", "application.jar"]

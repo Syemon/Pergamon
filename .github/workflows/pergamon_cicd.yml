@@ -11,7 +11,7 @@ name: Java CI with Maven
 on:
   push:
     paths:
-      - 'pergamnon/**'
+      - 'pergamon/**'
 jobs:
   build:
     runs-on: ubuntu-latest
